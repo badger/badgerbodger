@@ -169,5 +169,3 @@ if contributions_request.status_code == 200:
 else: 
     print("Error fetching contribution graph")
     quit()
-
-print(f"\nOutput saved to build/{username}\n")

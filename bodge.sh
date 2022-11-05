@@ -25,11 +25,11 @@ done
 
 # Copy the content of the /generated folder to the root of the attached device.
 echo "Copying generated content"
-ampy --port /dev/cu.usbmodem1401 put generated /
+ampy --port /dev/cu.usbmodem* put generated /
 
 # Copy the content of the /preload folder to the root of the attached device.
 echo "Copying preload content"
-ampy --port /dev/cu.usbmodem1401 put preload /
+ampy --port /dev/cu.usbmodem* put preload /
 
 # Reboot the board
-ampy --port /dev/cu.usbmodem1401 reset --hard
+ampy --port /dev/cu.usbmodem* reset --hard
