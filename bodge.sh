@@ -1,11 +1,22 @@
 #!/bin/bash
-echo "Preloading Badger with custom data"
+# Get first argument
+if [ -z "$1" ]
+then
+    echo "No GitHub handle supplied, re-run as 'bodge.sh <github_handle>'"
+    exit 1
+fi
+
+echo "Preloading Badger with custom data for $1"
 
 # Generate content 
+rm -rf generated
 mkdir -p generated
+
+python3 scripts/getdata.py --handle $1
 
 # Convert any png images in the /images folder
 echo "Converting images"
+mkdir -p generated/images
 
 for f in images/*.png; do
     echo "Converting $f"

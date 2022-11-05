@@ -1,0 +1,7 @@
+Pillow
+lxml
+requests
+qrcode[pil]
+argparse
+adafruit-ampy
+
