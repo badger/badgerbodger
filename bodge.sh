@@ -33,3 +33,6 @@ ampy --port /dev/cu.usbmodem* put preload /
 
 # Reboot the board
 ampy --port /dev/cu.usbmodem* reset --hard
+
+# Please god, no more 'desk not ejected properly' messages
+killall NotificationCenter
