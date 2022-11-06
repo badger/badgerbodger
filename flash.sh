@@ -17,19 +17,15 @@ do
   sleep 1
   echo "Flash device with Badger image"
   cp uf2-images/github-badger2040-mona-micropython.uf2 /Volumes/RPI-RP2
-  sleep 15
+  sleep 14
   killall NotificationCenter
 
   echo "Wait for LED to be on then enter the GitHub handle:"
+  afplay /System/Library/Sounds/Ping.aiff
+  
+  # get handle from keyboard
   read handle
-  if [ -z "$handle" ]
-  then
-      echo "No GitHub handle supplied, skipping customization'"
-  else
-      ./bodge.sh $handle
-  fi
-  afplay /System/Library/Sounds/Hero.aiff
+
+  ./bodge.sh $handle
   echo "Done!"
 done
-
-
