@@ -20,16 +20,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. """
 
-import urllib.request
-import requests
-from lxml import etree
-from io import StringIO
-import os
-import datetime
 import qrcode
-import shutil
 from lib import convert
-import argparse
 
 
 # Generate QR code
@@ -40,10 +32,5 @@ def generate_qr_code():
     pngfilename = f"generated/gh_qrcode.png"
     png.save(pngfilename)
     convert.convert(pngfilename)
-    # os.remove(pngfilename)
-
-#---------------------------
-# MAIN PROGRAM ENTRY POINT
-#---------------------------
 
 generate_qr_code()
