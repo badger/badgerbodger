@@ -10,7 +10,7 @@ then
     cp images/info_link.bin generated/gh_qrcode.bin
 else
     echo "Preloading Badger with custom data for $1"
-    python3 scripts/getdata.py --handle $1
+    /usr/bin/python3 scripts/getdata.py --handle $1
 fi
 
 # Convert any png images in the /images folder
@@ -19,7 +19,7 @@ mkdir -p generated/images
 
 for f in images/*.png; do
     echo "Converting $f"
-    python3 scripts/convert.py --binary --resize --out_dir generated/images $f
+    /usr/bin/python3 scripts/convert.py --binary --resize --out_dir generated/images $f
 done
 
 # Copy the content of the /generated folder to the root of the attached device.

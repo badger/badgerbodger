@@ -28,4 +28,5 @@ do
 
   ./bodge.sh $handle
   echo "Done!"
+  echo "Plug in a new badge to continue"
 done
