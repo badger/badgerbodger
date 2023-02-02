@@ -60,7 +60,7 @@ def parse_profile_data(html):
     badge_filename = f"generated/badge.txt"
     os.makedirs(os.path.dirname(badge_filename), exist_ok=True)
     with open(badge_filename, "w") as badge_file:
-        badge_file.write(f"Universe 2022\n{first_name}\n{last_name}\n@{username}")
+        badge_file.write(f"FOSDEM 2023\n{first_name}\n{last_name}\n@{username}")
         badge_file.close()
 
 
@@ -95,7 +95,10 @@ def parse_contributions_data(html):
         start_date = rect_nodes[187+week_position_offset].xpath("string(@data-date)")
         end_date = rect_nodes[len(rect_nodes)-1].xpath("string(@data-date)")
         for i in range(187+week_position_offset,len(rect_nodes)):
-            total += int(rect_nodes[i].xpath("string(@data-count)"))
+            contributions = 0
+            if rect_nodes[i].xpath("string(@data-count)") != "":
+                contributions = int(rect_nodes[i].xpath("string(@data-count)"))
+            total += contributions
             data_level = rect_nodes[i].xpath("string(@data-level)")
             graph_data+=f"\n{data_level}"
         
@@ -112,7 +115,10 @@ def parse_contributions_data(html):
         end_date = rect_nodes[186+week_position_offset].xpath("string(@data-date)")
         
         for i in range(4+week_position_offset,186+week_position_offset):
-            total += int(rect_nodes[i].xpath("string(@data-count)"))
+            contributions = 0
+            if rect_nodes[i].xpath("string(@data-count)") != "":
+                contributions = int(rect_nodes[i].xpath("string(@data-count)"))
+            total += contributions
             data_level = rect_nodes[i].xpath("string(@data-level)")
             graph_data+=f"\n{data_level}"
         contributions_file.write(f"{total} contributions between\n{dateformat(start_date)} - {dateformat(end_date)}")

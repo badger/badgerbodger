@@ -2,3 +2,4 @@
 .vscode
 generated/
 uf2-images/flash_nuke.uf2
+**/__pycache__/**
