@@ -1,7 +1,7 @@
-https://pimoroni.com/badger2040
+https://gh.io/badger
 GitHub Badger 2040
 * 296x128 1-bit e-ink
-* six user buttons
+* five user buttons
 * user LED
 * 2MB QSPI flash
 

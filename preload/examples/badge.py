@@ -81,9 +81,6 @@ def draw_badge():
     display.set_pen(0)
     display.set_font("sans")
 
-    title = truncatestring(title, DETAILS_TEXT_SIZE, TEXT_WIDTH)
-    pronouns = truncatestring(pronouns, DETAILS_TEXT_SIZE, TEXT_WIDTH)
-
     display.text(title, LEFT_PADDING, HEIGHT - (DETAILS_HEIGHT * 2) - LINE_SPACING, TEXT_WIDTH, DETAILS_TEXT_SIZE)
     display.text(pronouns, LEFT_PADDING, HEIGHT - DETAILS_HEIGHT, TEXT_WIDTH, DETAILS_TEXT_SIZE)
     

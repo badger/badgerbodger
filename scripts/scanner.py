@@ -56,6 +56,9 @@ class Scanner(Frame):
         _transfer_folder("preload")
         _transfer_folder("generated")
 
+        ## Remove default data from badge
+        _call_mpremote(['rm','books/289-0-wind-in-the-willows-abridged.txt'])
+
         ## Reboot the badge
         _call_mpremote(['reset'])
 
