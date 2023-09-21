@@ -25,6 +25,7 @@ class Scanner(Frame):
         exit_button.pack(fill='x', expand=True, pady=10)
 
         scantext_entry.bind('<Return>', self.handle_create)
+#        self.master.configure(background='black')
 
     def handle_create(self, event):
         scanned = self.scantext.get()
@@ -80,8 +81,8 @@ def main():
 
     root = Tk()
 
-    window_width = 500
-    window_height = 700
+    window_width = 480
+    window_height = 740
 
     # get the screen dimension
     screen_width = root.winfo_screenwidth()
@@ -93,7 +94,6 @@ def main():
 
     # set the position of the window to the center of the screen
     root.geometry(f'{window_width}x{window_height}+{center_x}+{center_y}')
-
     app = Scanner()
 
     # Fix size and make modal
