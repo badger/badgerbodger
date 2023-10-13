@@ -42,8 +42,8 @@ class Scanner(Frame):
         first_name = scan_data[1]
         last_name = scan_data[2]
         company = scan_data[3]
-        title = scan_data[4].upper()
-        pronouns = scan_data[5].upper()
+        title = scan_data[4].upper()    # By default convert to uppercase to match printed badges
+        pronouns = scan_data[5].upper() # A hacker can always change the case late if they want
 
         ## Create a file called generated/badges/badge.txt for writing.
         ## Write "Universe 2023", first_name, lastname_name, company, title, pronouns to the file on separate lines.
@@ -56,9 +56,6 @@ class Scanner(Frame):
         ## Copy all the data to the badge
         _transfer_folder("preload")
         _transfer_folder("generated")
-
-        ## Remove default data from badge
-        _call_mpremote(['rm','books/289-0-wind-in-the-willows-abridged.txt'])
 
         ## Reboot the badge
         _call_mpremote(['reset'])
