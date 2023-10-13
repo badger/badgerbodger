@@ -16,7 +16,9 @@ editing some of the files here and see what happens.
 
 This lanyard is a complete Raspberry Pi Pico dev board, if you want to
 drop your own custom uf2 image on here then you can do that too and turn
-this device into whatever you want.
+this device into whatever you want.  You can expand your badge via the
+Qwiic/STEMMA QT connector on the back.  We've also left some solder
+points available if you wanted to add other components.
 
 Can't wait to see what you build from here. Share your creations with us
 on social @GitHub and @Pimoroni!

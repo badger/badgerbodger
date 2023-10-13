@@ -14,6 +14,8 @@ LINE_SPACING = 2
 DETAILS_TEXT_SIZE = 0.5 
 
 BADGE_PATH = "/badges/badge.txt"
+BADGE_BACKGROUND = "/badges/back.jpg"
+
 
 # Will be replaced with badge.txt
 # "Universe 2023", first_name, lastname_name, company, title, pronouns to the file on separate lines.
@@ -50,6 +52,10 @@ def truncatestring(text, text_size, width):
 def draw_badge():
     display.set_pen(15)
     display.clear()
+    
+    # Draw the background
+    jpeg.open_file(BADGE_BACKGROUND)
+    jpeg.decode(0, 0)
 
     # Draw the firstname, scaling it based on the available width
     display.set_pen(0)
@@ -72,7 +78,7 @@ def draw_badge():
     while True:
         lastname_length = display.measure_text(last_name, lastname_size)
         if lastname_length >= TEXT_WIDTH and lastname_size >= 0.1:
-            surname_size -= 0.01
+            lastname_size -= 0.01
         else:
             display.text(last_name, LEFT_PADDING, NAME_HEIGHT + LINE_SPACING, TEXT_WIDTH, lastname_size)
             break
@@ -126,6 +132,12 @@ try:
     title = badge.readline()         # "Company Mascot"
     pronouns = badge.readline()      # "she/her"
     # handle = badge.readline()        # "@mona"
+    
+    
+    # Truncate Title and pronouns to fit
+    title = truncatestring(title, DETAILS_TEXT_SIZE, 110)
+    pronouns = truncatestring(pronouns, DETAILS_TEXT_SIZE, 110)
+    
 finally:
     badge.close()
 

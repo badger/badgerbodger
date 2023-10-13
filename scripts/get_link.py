@@ -27,7 +27,7 @@ from lib import convert
 # Generate QR code
 def generate_qr_code():
     qr = qrcode.QRCode(version=1,error_correction=qrcode.constants.ERROR_CORRECT_M, box_size=3, border=3,)
-    qr.add_data(f"https://github.co/badger2040")
+    qr.add_data(f"https://gh.io/badger")
     png = qr.make_image()
     pngfilename = f"generated/gh_qrcode.png"
     png.save(pngfilename)

@@ -1,7 +1,13 @@
-Images must be 296x128 pixel with 1bit colour depth.
+Images must be 296x128 pixel NON-PROGRESSIVE jpegs
 
-You can use https://github.com/pimoroni/pimoroni-pico/blob/main/examples/badger2040/image_converter/convert.py to convert them:
+The badge can only dsplay at 1-bit color depth, so any colour
+will be dithered to black and white.
 
-python3 convert.py --binary --resize image_file_1.png image_file_2.png image_file_3.png
+For best results, create a 1-bit PNG file and then use an
+application like ImageMagick to convert it to a jpeg.  By
+default many graphics applications will create a progressive
+jpeg which the JPEGDEC library in PicoGraphics does not support.
 
-Create a new "images" directory via Thonny, and upload the .bin files there.
+You can convert using a command like:
+
+> convert in.png -monochrome out.jpg

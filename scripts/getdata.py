@@ -60,7 +60,7 @@ def parse_profile_data(html):
     badge_filename = f"generated/badge.txt"
     os.makedirs(os.path.dirname(badge_filename), exist_ok=True)
     with open(badge_filename, "w") as badge_file:
-        badge_file.write(f"FOSDEM 2023\n{first_name}\n{last_name}\n@{username}")
+        badge_file.write(f"UNIVERSE 2023\n{first_name}\n{last_name}\n@{username}")
         badge_file.close()
 
 
