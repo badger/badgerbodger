@@ -5,6 +5,7 @@ from state_page import StatePage
 import subprocess
 from scanner import Scanner
 import os
+import time
 
 # GUI for badge programmer
 
@@ -14,18 +15,21 @@ class BadgeProgrammerUI(tk.Frame):
         self.initUI()
 
     def initUI(self):
-        self.state_list = ["initializing","disconnected","ready","uploading","nuking","complete","error"]
+        self.state_list = ["initializing","disconnected","ready","uploading","nuking","complete","error", "rebooting"]
         self.current_state = "initializing"
         self.state_pages = map(self.get_state_page, self.state_list)
         self.badger_detected = False
         self.state_frame = tk.Frame(self.master)
-        self.scanner_frame = tk.Frame(self, height=10)
+        self.scanner_frame = tk.Frame(self.master, height=10)
         
         self.state_frame.pack(fill=tk.BOTH, expand=True)
+        # 
         self.set_state("disconnected")
+        self.detection_loop_on = True
+        self.scanner = Scanner(self.scanner_frame, create_badge=self.create_badge)
+        
+        self.scanner.pack()
         self.badge_detection_loop()
-        
-        
         
 
     # Get pages for different states of the program
@@ -37,7 +41,9 @@ class BadgeProgrammerUI(tk.Frame):
                 widget.destroy()
 
             if state == "ready":
-                Scanner(self.scanner_frame, create_badge=self.create_badge).pack()
+                self.scanner_frame.pack()
+            else:
+                self.scanner_frame.pack_forget()
 
             state_page = StatePage(self.state_frame, state)
             state_page.pack(fill=tk.BOTH, expand=True)
@@ -52,17 +58,24 @@ class BadgeProgrammerUI(tk.Frame):
 
     # Check if badge is connected 
     def badge_detection_loop(self):
+        if self.current_state == 'rebooting':
+            return
+        
         detection = subprocess.run(['mpremote', 'ls'])
         badger_detected = detection.returncode == 0
-        if badger_detected and self.current_state != "complete":
-            self.set_state("ready")
-        else: 
+
+        if not badger_detected:
             self.set_state("disconnected")
 
-        self.after(1000, self.badge_detection_loop)
+        elif badger_detected and self.current_state != 'complete':
+            self.set_state("ready")
+            
+        if self.detection_loop_on:
+            self.after(1000, self.badge_detection_loop)
+       
         
-
     def create_badge(self, scanned):
+        self.detection_loop_on = False
         self.set_state("uploading")
         print(scanned)
         scan_data = scanned.split('^')
@@ -85,11 +98,19 @@ class BadgeProgrammerUI(tk.Frame):
             badge_file.close()
 
         # Copy all the data to the badge
+        print("Transferring")
         _transfer_folder("preload")
         _transfer_folder("generated")
-        self.set_state("complete")
+
         # Reboot the badge
-        _call_mpremote(['reset'])
+        self.set_state("rebooting")
+        print(_call_mpremote(['reset']))
+        print("Resetting")
+        # Wait 5 seconds for reboot
+        time.sleep(5)
+        self.detection_loop_on = True
+        self.set_state("complete")
+        self.badge_detection_loop()
 
 
 def _transfer_folder(root):
@@ -106,6 +127,7 @@ def _call_mpremote(args):
     proc = subprocess.run(args, capture_output=True, text=True)
     print(proc.stdout)
     print(proc.stderr)
+    return proc.returncode == 0
 
 
     
