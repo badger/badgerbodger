@@ -20,12 +20,15 @@ class BadgeProgrammerUI(tk.Frame):
         self.state_pages = map(self.get_state_page, self.state_list)
         self.badger_detected = False
         self.state_frame = tk.Frame(self.master)
-        self.scanner_frame = tk.Frame(self, height=10)
+        self.scanner_frame = tk.Frame(self.master, height=10)
         
         self.state_frame.pack(fill=tk.BOTH, expand=True)
+        # 
         self.set_state("disconnected")
         self.detection_loop_on = True
+        self.scanner = Scanner(self.scanner_frame, create_badge=self.create_badge)
         
+        self.scanner.pack()
         self.badge_detection_loop()
         
 
@@ -38,7 +41,9 @@ class BadgeProgrammerUI(tk.Frame):
                 widget.destroy()
 
             if state == "ready":
-                Scanner(self.scanner_frame, create_badge=self.create_badge).pack()
+                self.scanner_frame.pack()
+            else:
+                self.scanner_frame.pack_forget()
 
             state_page = StatePage(self.state_frame, state)
             state_page.pack(fill=tk.BOTH, expand=True)

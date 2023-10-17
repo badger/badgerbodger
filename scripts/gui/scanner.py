@@ -10,20 +10,19 @@ class Scanner(Frame):
     def __init__(self, parent, create_badge):
         super().__init__(parent)
         self.create_badge = create_badge
-
+        self.parent = parent
         self.initUI()
 
     def initUI(self):
 
         self.scantext = StringVar()
 
-        scantext_entry = Entry(textvariable=self.scantext)
-        scantext_entry.pack(fill='x',)
-        scantext_entry.focus()
-        scantext_entry.bind('<Return>', self.handle_create)
+        self.scantext_entry = Entry(self.parent, textvariable=self.scantext)
+        self.scantext_entry.pack(fill='x',)
+        self.scantext_entry.focus()
+        self.scantext_entry.bind('<Return>', self.handle_create)
 
     def handle_create(self, event):
         scanned = self.scantext.get()
         self.scantext.set("")
         self.create_badge(scanned)
-        
