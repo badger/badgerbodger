@@ -23,10 +23,8 @@ class BadgeProgrammerUI(tk.Frame):
         
         self.state_frame.pack(fill=tk.BOTH, expand=True)
         self.set_state("disconnected")
+        self.badge_detection_interval = 1000
         self.badge_detection_loop()
-        
-        
-        
 
     # Get pages for different states of the program
     def get_state_page(state): 
@@ -54,12 +52,34 @@ class BadgeProgrammerUI(tk.Frame):
     def badge_detection_loop(self):
         detection = subprocess.run(['mpremote', 'ls'])
         badger_detected = detection.returncode == 0
-        if badger_detected and self.current_state != "complete":
-            self.set_state("ready")
+
+        if badger_detected:
+            if self.badge_complete_check():
+                self.set_state("complete")
+            else:
+                self.set_state("ready")
+        
         else: 
             self.set_state("disconnected")
+            self.badge_detection_interval = 1000
 
-        self.after(1000, self.badge_detection_loop)
+        self.after(self.badge_detection_interval, self.badge_detection_loop)
+
+    def badge_complete_check(self):
+        # Checking locally the contents of the last generated badge
+        last_badge_path = 'generated/badges/badge.txt'
+        if(os.path.exists(last_badge_path)):
+                with open(last_badge_path) as f:
+                    last_badge_contents = f.read()
+
+                    # Checking remote badge.txt
+                    remote_badge = subprocess.run(['mpremote','cat','badges/badge.txt'], capture_output=True, text=True)
+                    if remote_badge.returncode == 0 and last_badge_contents == remote_badge.stdout:
+                        # Same badge
+                        return True
+                    
+        #Not the same badge
+        return False
         
 
     def create_badge(self, scanned):
@@ -88,6 +108,7 @@ class BadgeProgrammerUI(tk.Frame):
         _transfer_folder("preload")
         _transfer_folder("generated")
         self.set_state("complete")
+        self.badge_detection_interval = 5000
         # Reboot the badge
         _call_mpremote(['reset'])
 
