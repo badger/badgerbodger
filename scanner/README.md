@@ -33,21 +33,19 @@ In advanced options (the little gear icon), the following options were selected:
 - Set the locale to `US/Pacific` and keyboard layout to `US`
 
 Once Raspbian is flashed to the SD card, re-insert it into the computer and edit the `firstrun.sh` script to include the following
-just before the last 3 lines of the script (i.e. just before):
-```
-rm -f /boot/firstrun.sh
-```
+just before the last 3 lines of the script (i.e. just before) `rm -f /boot/firstrun.sh`
 
-TOOD - ADD SCRIPT STEP TO CLONE THE GIT REPO AND RUN THE INSTALL SCRIPT
 ```
+# Create the install.sh script to clone a git repo, then run firstrun.sh in it
 mkdir -p /home/badger/.config/autostart
 cat << EOF > /home/badger/install.sh
 #!/bin/bash
-git clone --branch install-instructions https://github.com/badger2040/badgerbodger.git /home/badger/badgerbodger
+sleep 30
+git clone --branch prod https://github.com/badger2040/badgerbodger.git /home/badger/badgerbodger
 chmod +x /home/badger/badgerbodger/firstrun.sh
 /bin/bash /home/badger/badgerbodger/firstrun.sh
 rm /home/badger/.config/autostart/install.desktop
-rm /home/badger/install.sh
+# rm /home/badger/install.sh
 exit 0
 EOF
 
