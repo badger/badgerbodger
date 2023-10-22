@@ -13,14 +13,6 @@ export PATH=$PATH:~/.local/bin
 pip3 install --upgrade pip
 pip3 install -r scripts/requirements.txt
 
-# Set scanner to run on boot
-mkdir -p /home/badger/.config/autostart
-cat << EOF > /home/badger/.config/autostart/scanner.desktop
-[Desktop Entry]
-Name=Scanner
-Exec=/usr/bin/python3 /home/badger/badgerbodger/scripts/gui/main.py
-EOF
-
 # Set screensaver to not run
 export DISPLAY=:0;xset s noblank; xset s off; xset -dpms
 # Set screensaver to not run on boot
@@ -29,3 +21,14 @@ cat << EOF > /home/badger/.config/autostart/noscreensaver.desktop
 Name=Disable Screen Saver
 Exec=/usr/bin/xset s noblank; xset s off; xset -dpms
 EOF
+
+# Set scanner to run on boot
+mkdir -p /home/badger/.config/autostart
+cat << EOF > /home/badger/.config/autostart/scanner.desktop
+[Desktop Entry]
+Name=Scanner
+Exec=/usr/bin/python3 /home/badger/badgerbodger/scripts/gui/main.py
+EOF
+# First run of scanner
+/usr/bin/python3 /home/badger/badgerbodger/scripts/gui/main.py
+

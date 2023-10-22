@@ -40,12 +40,12 @@ rm -f /boot/firstrun.sh
 
 TOOD - ADD SCRIPT STEP TO CLONE THE GIT REPO AND RUN THE INSTALL SCRIPT
 ```
-# Create the install.sh script to clone a git repo, then run firstrun.sh in it
+mkdir -p /home/badger/.config/autostart
 cat << EOF > /home/badger/install.sh
 #!/bin/bash
-git clone --branch install-instuctions https://github.com/badger2040/badgerbodger.git /home/badger/badgerbodger
-chmod +x /home/badger/badgerbodger/scripts/firstrun.sh
-/bin/bash /home/badger/badgerbodger/scripts/firstrun.sh
+git clone --branch install-instructions https://github.com/badger2040/badgerbodger.git /home/badger/badgerbodger
+chmod +x /home/badger/badgerbodger/firstrun.sh
+/bin/bash /home/badger/badgerbodger/firstrun.sh
 rm /home/badger/.config/autostart/install.desktop
 rm /home/badger/install.sh
 exit 0
@@ -57,6 +57,8 @@ cat << EOF > /home/badger/.config/autostart/install.desktop
 Name=Install
 Exec=/bin/bash /home/badger/install.sh
 EOF
+chown -R badger:badger /home/badger
+
 ```
 
 Then finally edit the config.txt file and add the following to the bottom of the file:
