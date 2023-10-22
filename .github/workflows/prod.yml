@@ -1,0 +1,20 @@
+name: Push to Prod
+on:
+  workflow_dispatch:
+jobs:
+  push:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v2
+    - name: Set up git config
+      run: |
+       git config user.name "GitHub Actions"
+       git config user.email noreply@github.com
+    - name: Recreate prod branch
+      run: |
+       git branch -d prod
+       git checkout -b prod
+    - name: Push new branch
+      run: git push origin prod
