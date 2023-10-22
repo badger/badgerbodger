@@ -6,3 +6,4 @@ argparse
 mpremote
 tk
 customtkinter
+packaging
