@@ -10,13 +10,10 @@ jobs:
       uses: actions/checkout@v4
       with:
         fetch-depth: 0
-    - name: Set up git config
-      run: |
-       git config user.name "GitHub Actions"
-       git config user.email noreply@github.com
-    - name: Recreate prod branch
-      run: |
-       git branch -d prod
-       git checkout -b prod
-    - name: Push new branch
-      run: git push origin prod
+    - name: Push to prod
+      uses: devmasx/merge-branch@master
+      with:
+        type: now
+        target_branch: prod
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        
