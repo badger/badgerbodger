@@ -15,5 +15,6 @@ jobs:
       with:
         type: now
         target_branch: prod
+        message: Release to prod
         github_token: ${{ secrets.GITHUB_TOKEN }}
         
