@@ -38,35 +38,35 @@ class SettingsMenu(tk.Frame):
                              command=self.nuke,
                              height=3
                              )
-        btn_nuke.pack(fill='x')
+        btn_nuke.pack(fill='x', pady=16)
 
         btn_mona = tk.Button(buttons_frame, 
                              text="Burn Mona Badge", 
                              command=self.mona,
                              height=3
                              )
-        btn_mona.pack(fill='x')
+        btn_mona.pack(fill='x', pady=16)
 
         btn_update = tk.Button(buttons_frame,
                                text="Update Software",
                                command=self.update,
                                height=3
                                 )
-        btn_update.pack(fill='x')
+        btn_update.pack(fill='x', pady=16)
 
         btn_reboot = tk.Button(buttons_frame, 
                                text="Reboot",
                                command=self.reboot, 
                                height=3
                                )
-        btn_reboot.pack(fill='x')
+        btn_reboot.pack(fill='x', pady=16)
 
         btn_shutdown = tk.Button(buttons_frame, 
                                  text="Shut Down",
                                  command=self.shutdown,
                                  height=3
                                  )
-        btn_shutdown.pack(fill='x')
+        btn_shutdown.pack(fill='x', pady=16)
 
         buttons_frame.pack(fill='both')
 
