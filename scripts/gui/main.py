@@ -21,9 +21,7 @@ class BadgeProgrammerUI(tk.Frame):
         self.initUI()
 
     def initUI(self):
-        self.state_list = ["initializing","disconnected","ready","uploading","nuking","complete","error", "rebooting"]
-        self.current_state = "initializing"
-        self.state_pages = map(self.get_state_page, self.state_list)
+        self.current_state = "wait"
         self.badger_detected = False
         self.state_frame = tk.Frame(self.master)
         self.scanner_frame = tk.Frame(self.master, height=10)
@@ -52,7 +50,8 @@ class BadgeProgrammerUI(tk.Frame):
             self.settings_frame = SettingsMenu(self.master, 
                                                on_request_update=self.manual_update,
                                                on_request_nuke=self.nuke_badge,
-                                               on_request_mona=self.mona_badge
+                                               on_request_mona=self.mona_badge,
+                                               badge_connected=self.badge_detected
                                                )
             self.settings_frame.place(x=0,y=0, width=480,height=800)
             self.settings_shown = True
@@ -91,12 +90,12 @@ class BadgeProgrammerUI(tk.Frame):
             return
         
         detection = subprocess.run(['mpremote', 'ls'])
-        badger_detected = detection.returncode == 0
+        self.badge_detected = detection.returncode == 0
 
-        if not badger_detected:
+        if not self.badge_detected:
             self.set_state("disconnected")
 
-        elif badger_detected and self.current_state != 'complete':
+        elif self.badge_detected and self.current_state != 'complete':
             self.set_state("ready")
                 
         self.badge_loop_scheduler =  self.after(1000, self.badge_detection_loop)

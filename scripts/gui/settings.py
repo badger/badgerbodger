@@ -12,7 +12,7 @@ script_dir = os.path.dirname(os.path.abspath(__file__))
 
 class SettingsMenu(tk.Frame):
 
-    def __init__(self, parent, on_request_update, on_request_nuke, on_request_mona):
+    def __init__(self, parent, on_request_update, on_request_nuke, on_request_mona, badge_connected):
         tk.Frame.__init__(self,parent)
         self.config(width=480, height=800, padx=32, pady=32, background='black')
         self.on_request_update = on_request_update
@@ -31,19 +31,36 @@ class SettingsMenu(tk.Frame):
         label_internet = tk.Label(self, textvariable=self.internet_connection, anchor='w', background='black')
         label_internet.pack(fill='x')
 
+        badge_label_text = "Badge: Disconnected"
+        if badge_connected:
+            badge_label_text = "Badge: Connected"
+
+        label_badge = tk.Label(self, text=badge_label_text, anchor='w', background='black')
+        label_badge.pack(fill='x')
+
+
         buttons_frame = tk.Frame(self, padx=60, pady=60, background='black')
+
+        
+        if(badge_connected):
+            button_state = 'normal'
+        else:
+            button_state = 'disabled'
+        
 
         btn_nuke = tk.Button(buttons_frame, 
                              text="Nuke Badge", 
                              command=self.nuke,
-                             height=3
+                             height=3,
+                             state=button_state
                              )
         btn_nuke.pack(fill='x', pady=16)
 
         btn_mona = tk.Button(buttons_frame, 
                              text="Burn Mona Badge", 
                              command=self.mona,
-                             height=3
+                             height=3,
+                             state=button_state
                              )
         btn_mona.pack(fill='x', pady=16)
 
