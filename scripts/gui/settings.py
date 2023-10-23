@@ -8,35 +8,38 @@ import subprocess
 import os
 
 
+
 script_dir = os.path.dirname(os.path.abspath(__file__))
 
 class SettingsMenu(tk.Frame):
 
     def __init__(self, parent, on_request_update, on_request_nuke, on_request_mona, badge_connected):
         tk.Frame.__init__(self,parent)
-        self.config(width=480, height=800, padx=32, pady=32, background='black')
+        self.config(width=480, height=800, padx=24, pady=24, background='black')
         self.on_request_update = on_request_update
         self.on_request_nuke = on_request_nuke
         self.on_request_mona = on_request_mona
 
         self.close_img = ImageTk.PhotoImage(Image.open(os.path.join(script_dir,f'images/close.png')))
         self.close_btn = tk.Button(self, text="", image=self.close_img, command=self.close)
-        self.close_btn.pack(anchor='ne')
+        self.close_btn.place(x=376,y=0)
 
         self.internet_connection = tk.StringVar(self, "Internet: Checking")
 
-        label_ip = tk.Label(self, text=f'IP Address:  {self.get_ip()}', anchor='w', background='black')
+        label_ip = tk.Label(self, text=f'IP Address:  {self.get_ip()}', anchor='w', background='black', foreground='white',  font=('TkDefaultFont', 20) )
         label_ip.pack(fill="x")
 
-        label_internet = tk.Label(self, textvariable=self.internet_connection, anchor='w', background='black')
+        label_internet = tk.Label(self, textvariable=self.internet_connection, anchor='w', background='black', foreground='white',  font=('TkDefaultFont', 20))
         label_internet.pack(fill='x')
 
         badge_label_text = "Badge: Disconnected"
         if badge_connected:
             badge_label_text = "Badge: Connected"
 
-        label_badge = tk.Label(self, text=badge_label_text, anchor='w', background='black')
+        label_badge = tk.Label(self, text=badge_label_text, anchor='w', background='black', foreground='white',  font=('TkDefaultFont', 20))
         label_badge.pack(fill='x')
+
+        self.close_btn.lift()
 
 
         buttons_frame = tk.Frame(self, padx=60, pady=60, background='black')
@@ -52,38 +55,43 @@ class SettingsMenu(tk.Frame):
                              text="Nuke Badge", 
                              command=self.nuke,
                              height=3,
-                             state=button_state
+                             state=button_state,
+                             font=('TkDefaultFont', 21)
                              )
-        btn_nuke.pack(fill='x', pady=16)
+        btn_nuke.pack(fill='x', pady=8)
 
         btn_mona = tk.Button(buttons_frame, 
                              text="Burn Mona Badge", 
                              command=self.mona,
                              height=3,
-                             state=button_state
+                             state=button_state,
+                             font=('TkDefaultFont', 21)
                              )
-        btn_mona.pack(fill='x', pady=16)
+        btn_mona.pack(fill='x', pady=8)
 
         btn_update = tk.Button(buttons_frame,
                                text="Update Software",
                                command=self.update,
-                               height=3
+                               height=3,
+                               font=('TkDefaultFont', 21)
                                 )
-        btn_update.pack(fill='x', pady=16)
+        btn_update.pack(fill='x', pady=8)
 
         btn_reboot = tk.Button(buttons_frame, 
                                text="Reboot",
                                command=self.reboot, 
-                               height=3
+                               height=3,
+                               font=('TkDefaultFont', 21)
                                )
-        btn_reboot.pack(fill='x', pady=16)
+        btn_reboot.pack(fill='x', pady=8)
 
         btn_shutdown = tk.Button(buttons_frame, 
                                  text="Shut Down",
                                  command=self.shutdown,
-                                 height=3
+                                 height=3,
+                                 font=('TkDefaultFont', 21)
                                  )
-        btn_shutdown.pack(fill='x', pady=16)
+        btn_shutdown.pack(fill='x', pady=8)
 
         buttons_frame.pack(fill='both')
 

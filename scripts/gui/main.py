@@ -38,7 +38,7 @@ class BadgeProgrammerUI(tk.Frame):
         self.settings_btn = tk.Button(self.master, text="", 
                                       image=self.settings_img,
                                       command=self.toggle_settings)
-        self.settings_btn.place(x=416,y=16)
+        self.settings_btn.place(x=400,y=24)
 
         
 
