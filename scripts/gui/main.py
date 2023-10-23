@@ -6,6 +6,7 @@ import subprocess
 from scanner import Scanner
 import os
 import time
+import sys
 
 # GUI for badge programmer
 
@@ -23,12 +24,16 @@ class BadgeProgrammerUI(tk.Frame):
         self.scanner_frame = tk.Frame(self.master, height=10)
         
         self.state_frame.pack(fill=tk.BOTH, expand=True)
+
+        self.check_for_update()
+
         self.set_state("disconnected")
         self.detection_loop_on = True
         self.scanner = Scanner(self.scanner_frame, create_badge=self.create_badge)
-        
         self.scanner.pack()
         self.badge_detection_loop()
+       
+
         
 
     # Get pages for different states of the program
@@ -124,6 +129,18 @@ class BadgeProgrammerUI(tk.Frame):
         self.detection_loop_on = True
         self.set_state("complete")
         self.badge_detection_loop()
+    
+    def check_for_update(self):
+        self.set_state("update_checking")
+        update_availability = subprocess.check_output(['sh','update_check.sh'])
+        
+        if update_availability.decode().strip() == "update_available":
+            self.set_state("updating")
+            subprocess.call(['git','pull'])
+            os.execl(sys.executable, os.path.abspath(__file__), *sys.argv)
+            
+
+        
 
 
 def _transfer_folder(root):
@@ -149,6 +166,7 @@ def main():
     window = tk.Tk()
     window.geometry("480x800")
     window.configure(bg='black')
+    #window.attributes('-fullscreen', True)
     window.resizable(width=False,height=False)    
     BadgeProgrammerUI()
     window.mainloop()
