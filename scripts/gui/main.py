@@ -1,11 +1,17 @@
 import tkinter as tk
 from tkinter import ttk
 from state_page import StatePage
+from PIL import Image, ImageTk
 
 import subprocess
 from scanner import Scanner
+from settings import SettingsMenu
 import os
 import time
+import sys
+
+
+script_dir = os.path.dirname(os.path.abspath(__file__))
 
 # GUI for badge programmer
 
@@ -15,20 +21,43 @@ class BadgeProgrammerUI(tk.Frame):
         self.initUI()
 
     def initUI(self):
-        self.state_list = ["initializing","disconnected","ready","uploading","nuking","complete","error", "rebooting"]
-        self.current_state = "initializing"
-        self.state_pages = map(self.get_state_page, self.state_list)
+        self.current_state = "wait"
         self.badger_detected = False
         self.state_frame = tk.Frame(self.master)
         self.scanner_frame = tk.Frame(self.master, height=10)
         
         self.state_frame.pack(fill=tk.BOTH, expand=True)
+
+        self.check_for_update()
+
         self.set_state("disconnected")
-        self.detection_loop_on = True
         self.scanner = Scanner(self.scanner_frame, create_badge=self.create_badge)
-        
         self.scanner.pack()
+        
+        self.settings_img = ImageTk.PhotoImage(Image.open(os.path.join(script_dir,f'images/settings.png')))
+        self.settings_btn = tk.Button(self.master, text="", 
+                                      image=self.settings_img,
+                                      command=self.toggle_settings)
+        self.settings_btn.place(x=400,y=24)
+
+        
+
         self.badge_detection_loop()
+
+    
+    #Show settings page
+    def toggle_settings(self):
+            self.settings_frame = SettingsMenu(self.master, 
+                                               on_request_update=self.manual_update,
+                                               on_request_nuke=self.nuke_badge,
+                                               on_request_mona=self.mona_badge,
+                                               badge_connected=self.badge_detected
+                                               )
+            self.settings_frame.place(x=0,y=0, width=480,height=800)
+            self.settings_shown = True
+
+
+
         
 
     # Get pages for different states of the program
@@ -61,20 +90,19 @@ class BadgeProgrammerUI(tk.Frame):
             return
         
         detection = subprocess.run(['mpremote', 'ls'])
-        badger_detected = detection.returncode == 0
+        self.badge_detected = detection.returncode == 0
 
-        if not badger_detected:
+        if not self.badge_detected:
             self.set_state("disconnected")
 
-        elif badger_detected and self.current_state != 'complete':
+        elif self.badge_detected and self.current_state != 'complete':
             self.set_state("ready")
-            
-        if self.detection_loop_on:
-            self.after(1000, self.badge_detection_loop)
+                
+        self.badge_loop_scheduler =  self.after(1000, self.badge_detection_loop)
        
         
     def create_badge(self, scanned):
-        self.detection_loop_on = False
+        self.after_cancel(self.badge_loop_scheduler)
         self.set_state("uploading")
         print(scanned)
         # Barcode gives data in the format
@@ -121,10 +149,47 @@ class BadgeProgrammerUI(tk.Frame):
         print("Resetting")
         # Wait 6 seconds for reboot
         time.sleep(6)
-        self.detection_loop_on = True
         self.set_state("complete")
         self.badge_detection_loop()
+    
+    def check_for_update(self, show_confirmation = False):
+        self.set_state("update_checking")
 
+        # Checking if update is available
+        update_availability = subprocess.check_output(['sh','update_check.sh'])
+        print(update_availability.decode().strip())
+
+        # If available, show updating state & perform git pull
+        if update_availability.decode().strip() == "update_available":
+            self.set_state("updating")
+            update_process = subprocess.run(['git','pull'], capture_output=True, text=True)
+
+            # If git pull successful, restart the application
+            if update_process.returncode == 0:
+                os.execl(sys.executable, os.path.abspath(__file__), *sys.argv)
+            else:
+                print(update_process.stdout) #Pull failed
+
+        elif show_confirmation:
+            print("Up to date")
+            self.after_cancel(self.badge_loop_scheduler)
+            self.set_state("up_to_date")
+            self.after(3000, self.badge_detection_loop)
+
+    def manual_update(self):
+         self.check_for_update(show_confirmation=True)
+    
+    def nuke_badge(self):
+        self.after_cancel(self.badge_loop_scheduler)
+        self.set_state("wait")
+        subprocess.run(['sh', 'nuke.sh'])
+        self.badge_detection_loop()
+
+    def mona_badge(self):
+        self.after_cancel(self.badge_loop_scheduler)
+        self.set_state("wait")
+        subprocess.run(['sh', 'mona.sh'])
+        self.badge_detection_loop()
 
 def _transfer_folder(root):
     # Iterate over the files in a given folder
@@ -138,9 +203,6 @@ def _transfer_folder(root):
 def _call_mpremote(args):
     args.insert(0, 'mpremote')
     proc = subprocess.run(args, capture_output=True, text=True)
-    # Debug - print mpremote calls.
-    #print(proc.stdout)
-    #print(proc.stderr)
     return proc.returncode == 0
 
 
@@ -149,9 +211,14 @@ def main():
     window = tk.Tk()
     window.geometry("480x800")
     window.configure(bg='black')
-    window.resizable(width=False,height=False)    
+    window.attributes('-fullscreen', True)
+    window.resizable(width=False,height=False)
+    window.bind("<Escape>",lambda event:window.attributes('-fullscreen', False))    
     BadgeProgrammerUI()
     window.mainloop()
+
+def end_fullscreen(self, event=None):
+    self.tk.attributes("-fullscreen", False)
 
 if __name__ == '__main__':
     main()
