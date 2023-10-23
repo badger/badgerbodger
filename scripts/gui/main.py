@@ -1,7 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
 from state_page import StatePage
-from state_page import script_dir
 from PIL import Image, ImageTk
 
 import subprocess
@@ -10,6 +9,9 @@ from settings import SettingsMenu
 import os
 import time
 import sys
+
+
+script_dir = os.path.dirname(os.path.abspath(__file__))
 
 # GUI for badge programmer
 
@@ -31,13 +33,15 @@ class BadgeProgrammerUI(tk.Frame):
         # self.check_for_update()
 
         self.set_state("disconnected")
-        self.detection_loop_on = True
         self.scanner = Scanner(self.scanner_frame, create_badge=self.create_badge)
         self.scanner.pack()
         
-        self.settings_shown = False
         self.settings_img = ImageTk.PhotoImage(Image.open(os.path.join(script_dir,f'images/github-mark-white.png')))
-        self.settings_btn = tk.Button(self.master, text="", image=self.settings_img, borderwidth=0, highlightthickness=0, padx=0, pady=0, bd=0, command=self.toggle_settings)
+        self.settings_btn = tk.Button(self.master, text="", 
+                                      image=self.settings_img,
+                                      borderwidth=0,
+                                      relief="solid",
+                                      command=self.toggle_settings)
         self.settings_btn.place(x=416,y=16)
 
         
@@ -47,14 +51,8 @@ class BadgeProgrammerUI(tk.Frame):
     
     #Show settings page
     def toggle_settings(self):
-        if self.settings_shown:
-            self.settings_frame.destroy()
-            self.settings_shown = False
-        else:
-           # self.settings_btn.place_forget()
-            self.settings_frame = SettingsMenu(self.master)
+            self.settings_frame = SettingsMenu(self.master, on_request_update=self.manual_update)
             self.settings_frame.place(x=0,y=0, width=480,height=800)
-            self.settings_btn.lift()
             self.settings_shown = True
 
 
@@ -98,14 +96,12 @@ class BadgeProgrammerUI(tk.Frame):
 
         elif badger_detected and self.current_state != 'complete':
             self.set_state("ready")
-            
-        if self.detection_loop_on:
-            self.update()
-            self.after(1000, self.badge_detection_loop)
+                
+        self.badge_loop_scheduler =  self.after(1000, self.badge_detection_loop)
        
         
     def create_badge(self, scanned):
-        self.detection_loop_on = False
+        self.after_cancel(self.badge_loop_scheduler)
         self.set_state("uploading")
         print(scanned)
         # Barcode gives data in the format
@@ -152,11 +148,10 @@ class BadgeProgrammerUI(tk.Frame):
         print("Resetting")
         # Wait 6 seconds for reboot
         time.sleep(6)
-        self.detection_loop_on = True
         self.set_state("complete")
         self.badge_detection_loop()
     
-    def check_for_update(self):
+    def check_for_update(self, show_confirmation = False):
         self.set_state("update_checking")
 
         # Checking if update is available
@@ -173,7 +168,15 @@ class BadgeProgrammerUI(tk.Frame):
                 os.execl(sys.executable, os.path.abspath(__file__), *sys.argv)
             else:
                 print(update_process.stdout) #Pull failed
-            
+
+        elif show_confirmation:
+            print("Up to date")
+            self.after_cancel(self.badge_loop_scheduler)
+            self.set_state("up_to_date")
+            self.after(3000, self.badge_detection_loop)
+
+    def manual_update(self):
+         self.check_for_update(show_confirmation=True)
 
         
 
@@ -190,9 +193,6 @@ def _transfer_folder(root):
 def _call_mpremote(args):
     args.insert(0, 'mpremote')
     proc = subprocess.run(args, capture_output=True, text=True)
-    # Debug - print mpremote calls.
-    #print(proc.stdout)
-    #print(proc.stderr)
     return proc.returncode == 0
 
 
