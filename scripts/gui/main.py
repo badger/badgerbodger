@@ -10,7 +10,6 @@ import os
 import time
 import sys
 
-
 script_dir = os.path.dirname(os.path.abspath(__file__))
 root_path = os.path.normpath(os.path.join(os.path.dirname(__file__), "..", ".."))
 
@@ -48,7 +47,6 @@ class BadgeProgrammerUI(tk.Frame):
         self.settings_btn.place(x=400,y=24)
 
         self.badge_detection_loop()
-
     
     #Show settings page
     def toggle_settings(self):
@@ -60,10 +58,6 @@ class BadgeProgrammerUI(tk.Frame):
                                                )
             self.settings_frame.place(x=0,y=0, width=480,height=800)
             self.settings_shown = True
-
-
-
-        
 
     # Get pages for different states of the program
     def get_state_page(state): 
@@ -88,23 +82,25 @@ class BadgeProgrammerUI(tk.Frame):
         self.current_state = state
         self.show_page(state=self.current_state)
 
-
-    # Check if badge is connected 
     def badge_detection_loop(self):
-        if self.current_state == 'rebooting':
-            return
-        
-        detection = subprocess.run(['mpremote', 'ls'])
-        self.badge_detected = detection.returncode == 0
+            """
+            Continuously checks for the presence of a badge using the 'mpremote ls' command.
+            If a badge is detected, sets the state to 'ready'.
+            If a badge is not detected, sets the state to 'disconnected'.
+            """
+            if self.current_state == 'rebooting':
+                return
+            
+            detection = subprocess.run(['mpremote', 'ls'],capture_output=True, text=True)
+            self.badge_detected = detection.returncode == 0
 
-        if not self.badge_detected:
-            self.set_state("disconnected")
+            if not self.badge_detected:
+                self.set_state("disconnected")
 
-        elif self.badge_detected and self.current_state != 'complete':
-            self.set_state("ready")
-                
-        self.badge_loop_scheduler =  self.after(1000, self.badge_detection_loop)
-       
+            elif self.badge_detected and self.current_state != 'complete':
+                self.set_state("ready")
+                    
+            self.badge_loop_scheduler =  self.after(1000, self.badge_detection_loop)
         
     def create_badge(self, scanned):
         self.after_cancel(self.badge_loop_scheduler)
@@ -158,13 +154,16 @@ class BadgeProgrammerUI(tk.Frame):
         self.set_state("update_checking")
 
         # Checking if update is available
-        update_availability = subprocess.check_output(['sh',os.path.join(root_path,'update_check.sh')])
+        update_availability = subprocess.check_output(['sh',os.path.join(root_path,'update_check.sh')],cwd=root_path)
         print(update_availability.decode().strip())
 
         # If available, show updating state & perform git pull
         if update_availability.decode().strip() == "update_available":
             self.set_state("updating")
-            update_process = subprocess.run(['git','pull'], capture_output=True, text=True)
+            update_process = subprocess.run(['git','pull origin --ff-only'],
+                                             capture_output=True, 
+                                             text=True,
+                                             cwd=root_path)
 
             # If git pull successful, restart the application
             if update_process.returncode == 0:
@@ -211,14 +210,11 @@ def _transfer_folder(root):
             remotepath = ":" + os.path.join(subdir, file).removeprefix(root)
             _call_mpremote(['cp', localpath, remotepath])
 
-
 def _call_mpremote(args):
     args.insert(0, 'mpremote')
     proc = subprocess.run(args, capture_output=True, text=True)
     return proc.returncode == 0
 
-
-    
 def main():
     window = tk.Tk()
     window.geometry("480x800")
