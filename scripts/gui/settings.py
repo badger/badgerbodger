@@ -12,10 +12,12 @@ script_dir = os.path.dirname(os.path.abspath(__file__))
 
 class SettingsMenu(tk.Frame):
 
-    def __init__(self, parent, on_request_update):
+    def __init__(self, parent, on_request_update, on_request_nuke, on_request_mona):
         tk.Frame.__init__(self,parent)
         self.config(width=480, height=800, padx=32, pady=32, background='black')
         self.on_request_update = on_request_update
+        self.on_request_nuke = on_request_nuke
+        self.on_request_mona = on_request_mona
 
         self.close_img = ImageTk.PhotoImage(Image.open(os.path.join(script_dir,f'images/close.png')))
         self.close_btn = tk.Button(self, text="", image=self.close_img, command=self.close)
@@ -34,32 +36,37 @@ class SettingsMenu(tk.Frame):
         btn_nuke = tk.Button(buttons_frame, 
                              text="Nuke Badge", 
                              command=self.nuke,
+                             height=3
                              )
-        btn_nuke.pack()
+        btn_nuke.pack(fill='x')
 
         btn_mona = tk.Button(buttons_frame, 
                              text="Burn Mona Badge", 
-                             command=self.mona
+                             command=self.mona,
+                             height=3
                              )
-        btn_mona.pack()
+        btn_mona.pack(fill='x')
 
         btn_update = tk.Button(buttons_frame,
                                text="Update Software",
-                               command=self.update
+                               command=self.update,
+                               height=3
                                 )
-        btn_update.pack()
+        btn_update.pack(fill='x')
 
         btn_reboot = tk.Button(buttons_frame, 
                                text="Reboot",
-                               command=self.reboot
+                               command=self.reboot, 
+                               height=3
                                )
-        btn_reboot.pack()
+        btn_reboot.pack(fill='x')
 
         btn_shutdown = tk.Button(buttons_frame, 
                                  text="Shut Down",
-                                 command=self.shutdown
+                                 command=self.shutdown,
+                                 height=3
                                  )
-        btn_shutdown.pack()
+        btn_shutdown.pack(fill='x')
 
         buttons_frame.pack(fill='both')
 
@@ -94,12 +101,12 @@ class SettingsMenu(tk.Frame):
         subprocess.run(['reboot'])
 
     def nuke(self):
-        subprocess.run(['sh', 'nuke.sh'])
-        self.destroy()
+        self.place_forget()
+        self.on_request_nuke()
 
     def mona(self):
-        subprocess.run(['sh', 'mona.sh'])
-        self.destroy()
+        self.place_forget()
+        self.on_request_mona()
 
     def update(self):
         self.place_forget()

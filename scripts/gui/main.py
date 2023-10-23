@@ -36,11 +36,9 @@ class BadgeProgrammerUI(tk.Frame):
         self.scanner = Scanner(self.scanner_frame, create_badge=self.create_badge)
         self.scanner.pack()
         
-        self.settings_img = ImageTk.PhotoImage(Image.open(os.path.join(script_dir,f'images/github-mark-white.png')))
+        self.settings_img = ImageTk.PhotoImage(Image.open(os.path.join(script_dir,f'images/settings.png')))
         self.settings_btn = tk.Button(self.master, text="", 
                                       image=self.settings_img,
-                                      borderwidth=0,
-                                      relief="solid",
                                       command=self.toggle_settings)
         self.settings_btn.place(x=416,y=16)
 
@@ -51,7 +49,11 @@ class BadgeProgrammerUI(tk.Frame):
     
     #Show settings page
     def toggle_settings(self):
-            self.settings_frame = SettingsMenu(self.master, on_request_update=self.manual_update)
+            self.settings_frame = SettingsMenu(self.master, 
+                                               on_request_update=self.manual_update,
+                                               on_request_nuke=self.nuke_badge,
+                                               on_request_mona=self.mona_badge
+                                               )
             self.settings_frame.place(x=0,y=0, width=480,height=800)
             self.settings_shown = True
 
@@ -177,9 +179,18 @@ class BadgeProgrammerUI(tk.Frame):
 
     def manual_update(self):
          self.check_for_update(show_confirmation=True)
+    
+    def nuke_badge(self):
+        self.after_cancel(self.badge_loop_scheduler)
+        self.set_state("wait")
+        subprocess.run(['sh', 'nuke.sh'])
+        self.badge_detection_loop()
 
-        
-
+    def mona_badge(self):
+        self.after_cancel(self.badge_loop_scheduler)
+        self.set_state("wait")
+        subprocess.run(['sh', 'mona.sh'])
+        self.badge_detection_loop()
 
 def _transfer_folder(root):
     # Iterate over the files in a given folder
