@@ -26,23 +26,23 @@ class SettingsMenu(tk.Frame):
 
         self.internet_connection = tk.StringVar(self, "Internet: Checking")
 
-        label_ip = tk.Label(self, text=f'IP Address:  {self.get_ip()}', anchor='w', background='black', foreground='white',  font=('TkDefaultFont', 20) )
+        label_ip = tk.Label(self, text=f'IP Address:  {self.get_ip()}', anchor='w', background='black', foreground='white',  font=('TkDefaultFont', 18) )
         label_ip.pack(fill="x")
 
-        label_internet = tk.Label(self, textvariable=self.internet_connection, anchor='w', background='black', foreground='white',  font=('TkDefaultFont', 20))
+        label_internet = tk.Label(self, textvariable=self.internet_connection, anchor='w', background='black', foreground='white',  font=('TkDefaultFont', 18))
         label_internet.pack(fill='x')
 
         badge_label_text = "Badge: Disconnected"
         if badge_connected:
             badge_label_text = "Badge: Connected"
 
-        label_badge = tk.Label(self, text=badge_label_text, anchor='w', background='black', foreground='white',  font=('TkDefaultFont', 20))
+        label_badge = tk.Label(self, text=badge_label_text, anchor='w', background='black', foreground='white',  font=('TkDefaultFont', 18))
         label_badge.pack(fill='x')
 
         self.close_btn.lift()
 
 
-        buttons_frame = tk.Frame(self, padx=60, pady=60, background='black')
+        buttons_frame = tk.Frame(self, padx=60, pady=24, background='black')
 
         
         if(badge_connected):
@@ -56,7 +56,7 @@ class SettingsMenu(tk.Frame):
                              command=self.nuke,
                              height=3,
                              state=button_state,
-                             font=('TkDefaultFont', 21)
+                             font=('TkDefaultFont', 18)
                              )
         btn_nuke.pack(fill='x', pady=8)
 
@@ -65,7 +65,7 @@ class SettingsMenu(tk.Frame):
                              command=self.mona,
                              height=3,
                              state=button_state,
-                             font=('TkDefaultFont', 21)
+                             font=('TkDefaultFont', 18)
                              )
         btn_mona.pack(fill='x', pady=8)
 
@@ -73,7 +73,7 @@ class SettingsMenu(tk.Frame):
                                text="Update Software",
                                command=self.update,
                                height=3,
-                               font=('TkDefaultFont', 21)
+                               font=('TkDefaultFont', 18)
                                 )
         btn_update.pack(fill='x', pady=8)
 
@@ -81,7 +81,7 @@ class SettingsMenu(tk.Frame):
                                text="Reboot",
                                command=self.reboot, 
                                height=3,
-                               font=('TkDefaultFont', 21)
+                               font=('TkDefaultFont', 18)
                                )
         btn_reboot.pack(fill='x', pady=8)
 
@@ -89,7 +89,7 @@ class SettingsMenu(tk.Frame):
                                  text="Shut Down",
                                  command=self.shutdown,
                                  height=3,
-                                 font=('TkDefaultFont', 21)
+                                 font=('TkDefaultFont', 18)
                                  )
         btn_shutdown.pack(fill='x', pady=8)
 
