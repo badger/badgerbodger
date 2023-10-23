@@ -1,8 +1,5 @@
 # Badger Bodger
-At GitHub events, the Badger 2040 is pre-loaded with data to personalise it to the individual with data taken from their attendee registration barcode.
-This repo contains the scripts for the badge customization code.  At the event this runs on a Raspberry Pi with a 2D barcode scanner attached, 
-however it can also run on laptop (tested on macOS).  It is assumed that the Badger 2040 is running a stock Badger OS image as flashed from the
-[Pimoroni](https://pimoroni.com/) Factory in Sheffield. The scripts were tested against [this Badger OS image](https://github.com/pimoroni/badger2040/releases/tag/v0.0.4).
+At GitHub events, the Badger 2040 is pre-loaded with data to personalise it to the individual with data taken from their attendee registration barcode. This repo contains the scripts for the badge customization code.  At the event this runs on a Raspberry Pi with a 2D barcode scanner attached, however it can also run on laptop (tested on macOS).  It is assumed that the Badger 2040 is running a stock Badger OS image as flashed from the[Pimoroni](https://pimoroni.com/) Factory in Sheffield. The scripts were tested against [this Badger OS image](https://github.com/pimoroni/badger2040/releases/tag/v0.0.4).
 
 ## Badger Modifications
 On top of the stock Badger OS image, the following changes are made:
