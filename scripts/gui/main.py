@@ -1,9 +1,12 @@
 import tkinter as tk
 from tkinter import ttk
 from state_page import StatePage
+from state_page import script_dir
+from PIL import Image, ImageTk
 
 import subprocess
 from scanner import Scanner
+from settings import SettingsMenu
 import os
 import time
 import sys
@@ -25,14 +28,36 @@ class BadgeProgrammerUI(tk.Frame):
         
         self.state_frame.pack(fill=tk.BOTH, expand=True)
 
-        self.check_for_update()
+        # self.check_for_update()
 
         self.set_state("disconnected")
         self.detection_loop_on = True
         self.scanner = Scanner(self.scanner_frame, create_badge=self.create_badge)
         self.scanner.pack()
+        
+        self.settings_shown = False
+        self.settings_img = ImageTk.PhotoImage(Image.open(os.path.join(script_dir,f'images/github-mark-white.png')))
+        self.settings_btn = tk.Button(self.master, text="", image=self.settings_img, borderwidth=0, highlightthickness=0, padx=0, pady=0, bd=0, command=self.toggle_settings)
+        self.settings_btn.place(x=416,y=16)
+
+        
+
         self.badge_detection_loop()
-       
+
+    
+    #Show settings page
+    def toggle_settings(self):
+        if self.settings_shown:
+            self.settings_frame.destroy()
+            self.settings_shown = False
+        else:
+           # self.settings_btn.place_forget()
+            self.settings_frame = SettingsMenu(self.master)
+            self.settings_frame.place(x=0,y=0, width=480,height=800)
+            self.settings_btn.lift()
+            self.settings_shown = True
+
+
 
         
 
@@ -75,6 +100,7 @@ class BadgeProgrammerUI(tk.Frame):
             self.set_state("ready")
             
         if self.detection_loop_on:
+            self.update()
             self.after(1000, self.badge_detection_loop)
        
         
@@ -175,7 +201,7 @@ def main():
     window = tk.Tk()
     window.geometry("480x800")
     window.configure(bg='black')
-    window.attributes('-fullscreen', True)
+    #window.attributes('-fullscreen', True)
     window.resizable(width=False,height=False)
     window.bind("<Escape>",lambda event:window.attributes('-fullscreen', False))    
     BadgeProgrammerUI()
