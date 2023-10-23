@@ -133,7 +133,7 @@ class BadgeProgrammerUI(tk.Frame):
     def check_for_update(self):
         self.set_state("update_checking")
         update_availability = subprocess.check_output(['sh','update_check.sh'])
-        
+        print(update_availability.decode().strip())
         if update_availability.decode().strip() == "update_available":
             self.set_state("updating")
             subprocess.call(['git','pull'])
@@ -166,7 +166,7 @@ def main():
     window = tk.Tk()
     window.geometry("480x800")
     window.configure(bg='black')
-    #window.attributes('-fullscreen', True)
+    window.attributes('-fullscreen', True)
     window.resizable(width=False,height=False)    
     BadgeProgrammerUI()
     window.mainloop()
