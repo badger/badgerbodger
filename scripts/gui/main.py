@@ -132,12 +132,21 @@ class BadgeProgrammerUI(tk.Frame):
     
     def check_for_update(self):
         self.set_state("update_checking")
+
+        # Checking if update is available
         update_availability = subprocess.check_output(['sh','update_check.sh'])
         print(update_availability.decode().strip())
+
+        # If available, show updating state & perform git pull
         if update_availability.decode().strip() == "update_available":
             self.set_state("updating")
-            subprocess.call(['git','pull'])
-            os.execl(sys.executable, os.path.abspath(__file__), *sys.argv)
+            update_process = subprocess.run(['git','pull'], capture_output=True, text=True)
+
+            # If git pull successful, restart the application
+            if update_process.returncode == 0:
+                os.execl(sys.executable, os.path.abspath(__file__), *sys.argv)
+            else:
+                print(update_process.stdout) #Pull failed
             
 
         
