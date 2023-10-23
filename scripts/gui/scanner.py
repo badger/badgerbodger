@@ -15,7 +15,7 @@ class Scanner(Frame):
 
         self.scantext = StringVar()
 
-        self.scantext_entry = Entry(self.parent, textvariable=self.scantext, background='black',borderwidth=0,highlightthickness=0)
+        self.scantext_entry = Entry(self.parent, textvariable=self.scantext, background='black')
         self.scantext_entry.pack(fill='x',)
         self.scantext_entry.focus()
         self.scantext_entry.bind('<Return>', self.handle_create)
