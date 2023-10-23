@@ -7,8 +7,6 @@ import requests
 import subprocess
 import os
 
-
-
 script_dir = os.path.dirname(os.path.abspath(__file__))
 
 class SettingsMenu(tk.Frame):
@@ -21,7 +19,12 @@ class SettingsMenu(tk.Frame):
         self.on_request_mona = on_request_mona
 
         self.close_img = ImageTk.PhotoImage(Image.open(os.path.join(script_dir,f'images/close.png')))
-        self.close_btn = tk.Button(self, text="", image=self.close_img, command=self.close)
+        self.close_btn = tk.Button(self, text="", 
+                                   image=self.close_img, 
+                                   command=self.close,
+                                   highlightthickness=0,
+                                   bd=0,
+                                   padx=0,pady=0,height=46,width=46)
         self.close_btn.place(x=376,y=0)
 
         self.internet_connection = tk.StringVar(self, "Internet: Checking")
@@ -41,24 +44,20 @@ class SettingsMenu(tk.Frame):
 
         self.close_btn.lift()
 
-
         buttons_frame = tk.Frame(self, padx=60, pady=24, background='black')
-
         
         if(badge_connected):
             button_state = 'normal'
         else:
             button_state = 'disabled'
         
-
-        btn_nuke = tk.Button(buttons_frame, 
-                             text="Nuke Badge", 
-                             command=self.nuke,
-                             height=3,
-                             state=button_state,
-                             font=('TkDefaultFont', 18)
-                             )
-        btn_nuke.pack(fill='x', pady=8)
+        btn_update = tk.Button(buttons_frame,
+                               text="Update Software",
+                               command=self.update,
+                               height=3,
+                               font=('TkDefaultFont', 18)
+                                )
+        btn_update.pack(fill='x', pady=8)
 
         btn_mona = tk.Button(buttons_frame, 
                              text="Burn Mona Badge", 
@@ -69,13 +68,14 @@ class SettingsMenu(tk.Frame):
                              )
         btn_mona.pack(fill='x', pady=8)
 
-        btn_update = tk.Button(buttons_frame,
-                               text="Update Software",
-                               command=self.update,
-                               height=3,
-                               font=('TkDefaultFont', 18)
-                                )
-        btn_update.pack(fill='x', pady=8)
+        btn_nuke = tk.Button(buttons_frame, 
+                             text="Nuke Badge", 
+                             command=self.nuke,
+                             height=3,
+                             state=button_state,
+                             font=('TkDefaultFont', 18)
+                             )
+        btn_nuke.pack(fill='x', pady=8)
 
         btn_reboot = tk.Button(buttons_frame, 
                                text="Reboot",
@@ -113,7 +113,7 @@ class SettingsMenu(tk.Frame):
     
     def check_internet_connection(self):
         try:
-            response = requests.get("https://github.com", timeout=5)
+            response = requests.get("https://api.github.com/status", timeout=5)
             self.internet_connection.set("Internet: Connected")
 
         except requests.ConnectionError:

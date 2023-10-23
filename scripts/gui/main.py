@@ -12,6 +12,7 @@ import sys
 
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
+root_path = os.path.normpath(os.path.join(os.path.dirname(__file__), "..", ".."))
 
 # GUI for badge programmer
 
@@ -28,19 +29,23 @@ class BadgeProgrammerUI(tk.Frame):
         
         self.state_frame.pack(fill=tk.BOTH, expand=True)
 
-        self.check_for_update()
+        # self.check_for_update()
 
         self.set_state("disconnected")
         self.scanner = Scanner(self.scanner_frame, create_badge=self.create_badge)
         self.scanner.pack()
         
         self.settings_img = ImageTk.PhotoImage(Image.open(os.path.join(script_dir,f'images/settings.png')))
+        
+        # Set the button to be smaller than the image to get rid of the 
+        # white border around the image.
         self.settings_btn = tk.Button(self.master, text="", 
                                       image=self.settings_img,
-                                      command=self.toggle_settings)
+                                      command=self.toggle_settings,
+                                      highlightthickness=0,
+                                      bd=0,
+                                      padx=0,pady=0,height=46,width=46)
         self.settings_btn.place(x=400,y=24)
-
-        
 
         self.badge_detection_loop()
 
@@ -126,9 +131,6 @@ class BadgeProgrammerUI(tk.Frame):
         if handle[0] == '"':
             handle = "@" + handle[1:]
 
-        # get root directory of the project
-        root_path = os.path.normpath(os.path.join(os.path.dirname(__file__), "..", ".."))
-
         # Create a file called generated/badges/badge.txt for writing.
         # Write "Universe 2023", first_name, lastname_name, company, title, pronouns, handle to the file on separate lines.
         badge_filename = os.path.join(root_path,"generated/badges/badge.txt")
@@ -147,8 +149,8 @@ class BadgeProgrammerUI(tk.Frame):
         self.set_state("rebooting")
         print(_call_mpremote(['reset']))
         print("Resetting")
-        # Wait 6 seconds for reboot
-        time.sleep(6)
+        # Wait 5 seconds for reboot
+        time.sleep(5)
         self.set_state("complete")
         self.badge_detection_loop()
     
@@ -156,7 +158,7 @@ class BadgeProgrammerUI(tk.Frame):
         self.set_state("update_checking")
 
         # Checking if update is available
-        update_availability = subprocess.check_output(['sh','update_check.sh'])
+        update_availability = subprocess.check_output(['sh',os.path.join(root_path,'update_check.sh')])
         print(update_availability.decode().strip())
 
         # If available, show updating state & perform git pull
@@ -182,13 +184,23 @@ class BadgeProgrammerUI(tk.Frame):
     def nuke_badge(self):
         self.after_cancel(self.badge_loop_scheduler)
         self.set_state("wait")
-        subprocess.run(['sh', 'nuke.sh'])
+        subprocess.run(['bash', os.path.join(root_path,'nuke.sh')])
         self.badge_detection_loop()
 
     def mona_badge(self):
         self.after_cancel(self.badge_loop_scheduler)
-        self.set_state("wait")
-        subprocess.run(['sh', 'mona.sh'])
+        
+        self.set_state("uploading")
+
+        _transfer_folder(os.path.join(root_path,"preload"))
+        # Reboot the badge
+        self.set_state("rebooting")
+        print(_call_mpremote(['reset']))
+        print("Resetting")
+        # Wait 5 seconds for reboot
+        time.sleep(5)
+        self.set_state("complete")
+
         self.badge_detection_loop()
 
 def _transfer_folder(root):
