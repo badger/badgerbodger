@@ -30,7 +30,7 @@ class BadgeProgrammerUI(tk.Frame):
         
         self.state_frame.pack(fill=tk.BOTH, expand=True)
 
-        # self.check_for_update()
+        self.check_for_update()
 
         self.set_state("disconnected")
         self.scanner = Scanner(self.scanner_frame, create_badge=self.create_badge)
