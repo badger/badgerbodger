@@ -167,9 +167,13 @@ def main():
     window.geometry("480x800")
     window.configure(bg='black')
     window.attributes('-fullscreen', True)
-    window.resizable(width=False,height=False)    
+    window.resizable(width=False,height=False)
+    window.bind("<Escape>",lambda event:window.attributes('-fullscreen', False))    
     BadgeProgrammerUI()
     window.mainloop()
+
+def end_fullscreen(self, event=None):
+    self.tk.attributes("-fullscreen", False)
 
 if __name__ == '__main__':
     main()
