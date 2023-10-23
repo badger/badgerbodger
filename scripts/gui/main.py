@@ -223,9 +223,17 @@ def main():
     window = tk.Tk()
     window.geometry("480x800")
     window.configure(bg='black')
-    window.attributes('-fullscreen', True)
-    window.resizable(width=False,height=False)
-    window.bind("<Escape>",lambda event:window.attributes('-fullscreen', False))    
+    window.title("Scanner")
+
+    # Check what OS we are running on and if it is not a Mac 
+    # then set the window to fullscreen
+    if sys.platform != 'darwin':
+        window.attributes('-fullscreen', True)
+        window.resizable(width=False,height=False)
+
+    # Bind escape key to exit fullscreen
+    window.bind("<Escape>",lambda event:window.attributes('-fullscreen', False))   
+
     BadgeProgrammerUI()
     window.mainloop()
 
