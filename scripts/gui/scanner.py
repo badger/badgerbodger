@@ -3,8 +3,6 @@ from tkinter.ttk import Frame, Label, Entry, Button
 import os
 import subprocess
 
-# Mostly reused scripts/scanner.py, pending modifications
-
 class Scanner(Frame):
 
     def __init__(self, parent, create_badge):
@@ -17,7 +15,7 @@ class Scanner(Frame):
 
         self.scantext = StringVar()
 
-        self.scantext_entry = Entry(self.parent, textvariable=self.scantext)
+        self.scantext_entry = Entry(self.parent, textvariable=self.scantext, background='black',borderwidth=0,highlightthickness=0)
         self.scantext_entry.pack(fill='x',)
         self.scantext_entry.focus()
         self.scantext_entry.bind('<Return>', self.handle_create)
