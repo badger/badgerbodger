@@ -211,7 +211,7 @@ def main():
     window = tk.Tk()
     window.geometry("480x800")
     window.configure(bg='black')
-    #window.attributes('-fullscreen', True)
+    window.attributes('-fullscreen', True)
     window.resizable(width=False,height=False)
     window.bind("<Escape>",lambda event:window.attributes('-fullscreen', False))    
     BadgeProgrammerUI()
