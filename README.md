@@ -13,12 +13,10 @@ Install the latest version of python 3 via homebrew
 ```
 brew install python
 ```
-
 Install Python prerequisites
 ```
 pip3 install -r scripts/requirements.txt
 ```
-
 Run the GUI
 ```
 python3 scripts/gui/main.py
