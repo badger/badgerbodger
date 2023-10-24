@@ -160,8 +160,8 @@ class BadgeProgrammerUI(tk.Frame):
         # If available, show updating state & perform git pull
         if update_availability.decode().strip() == "update_available":
             self.set_state("updating")
-            update_process = subprocess.run(['git','pull origin --ff-only'],
-                                             capture_output=True, 
+            update_process = subprocess.run(['git','pull','origin','--ff-only'],
+                                             capture_output=True,
                                              text=True,
                                              cwd=root_path)
 
@@ -169,7 +169,9 @@ class BadgeProgrammerUI(tk.Frame):
             if update_process.returncode == 0:
                 os.execl(sys.executable, os.path.abspath(__file__), *sys.argv)
             else:
-                print(update_process.stdout) #Pull failed
+                # Pull failed, show output
+                print(update_process.stdout) 
+                print(update_process.stderr) 
 
         elif show_confirmation:
             print("Up to date")
