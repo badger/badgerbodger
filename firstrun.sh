@@ -16,10 +16,13 @@ pip3 install -r scripts/requirements.txt
 # Set screensaver to not run
 export DISPLAY=:0;xset s noblank; xset s off; xset -dpms
 # Set screensaver to not run on boot
-cat << EOF > /home/badger/.config/autostart/noscreensaver.desktop
-[Desktop Entry]
-Name=Disable Screen Saver
-Exec=/usr/bin/xset s noblank; xset s off; xset -dpms
+mkdir -p /home/badger/.config/lxsession/LXDE-pi
+cat << EOF > /home/badger/.config/lxsession/LXDE-pi/autostart
+@xpanel --profile LXDE-pi
+@pcmanfm --desktop --profile LXDE-pi
+@xscreensaver -no-splash
+@xset -dpms
+@xset s off
 EOF
 
 # Set scanner to run on boot
@@ -29,6 +32,19 @@ cat << EOF > /home/badger/.config/autostart/scanner.desktop
 Name=Scanner
 Exec=/usr/bin/python3 /home/badger/badgerbodger/scripts/gui/main.py
 EOF
+
+# Disable USB autorun dialog
+mkdir -p /home/badger/.config/pcmanfm/LXDE-pi
+cat << EOF > /home/badger/.config/pcmanfm/LXDE-pi/pcmanfm.conf
+[config]
+bm_open_method=0
+
+[volume]
+mount_on_startup=1
+mount_removable=1
+autorun=0
+EOF
+
 # First run of scanner
 /usr/bin/python3 /home/badger/badgerbodger/scripts/gui/main.py
 
