@@ -13,6 +13,13 @@ import sys
 script_dir = os.path.dirname(os.path.abspath(__file__))
 root_path = os.path.normpath(os.path.join(os.path.dirname(__file__), "..", ".."))
 
+# Basic latin set & the Spanish keyboard input of set with US keyboard layout
+# This is because a Spanish keyboard reading the UTF-8 encoded QR code will
+# do a slightly better job of passing through non-accented versions of the characters
+# than a US keyboard reading the UTF-8 encoded QR code which will just ignore them.
+latin  = " !\"$%&'()*+,-./0123456789<=>?ABCDEFGHIJKLMNOPQRSTUVWXYZ^_`abcdefghijklmnopqrstuvwxyzc@"
+spanish = " !@$%^-*(}],/.&0123456789<)>_ABCDEFGHIJKLMNOPQRSTUVWXYZ{?[abcdefghijklmnopqrstuvwxyz#²"
+
 # GUI for badge programmer
 
 class BadgeProgrammerUI(tk.Frame):
@@ -105,41 +112,50 @@ class BadgeProgrammerUI(tk.Frame):
     def create_badge(self, scanned):
         self.after_cancel(self.badge_loop_scheduler)
         self.set_state("uploading")
-        print(scanned)
-        # Barcode gives data in the format
-        # 1687465756044001tUzB^Martin^Woodward^GitHub^VP, DevRel^He/him^@martinwoodward^
-        # Where pronouns and handle are optional but still delimited.
-        scan_data = scanned.split('^')
-        reg_id = scan_data[0]
-        first_name = scan_data[1]
-        last_name = scan_data[2]
-        company = scan_data[3]
-        handle = scan_data[6]
 
-        # By default convert to uppercase to match printed badges
-        # A hacker can always change the case later if they want
-        title = scan_data[4].upper()
-        pronouns = scan_data[5].upper()
-
-        # Depending on keyboard mapping, the @ symbol as the first character 
-        # of the handle may have been entered as "
-        # If so, replace it with @
-        if handle[0] == '"':
-            handle = "@" + handle[1:]
-
-        # Create a file called generated/badges/badge.txt for writing.
-        # Write "Universe 2023", first_name, lastname_name, company, title, pronouns, handle to the file on separate lines.
-        badge_filename = os.path.join(root_path,"generated/badges/badge.txt")
-        os.makedirs(os.path.dirname(badge_filename), exist_ok=True)
-        with open(badge_filename, "w") as badge_file:
-            badge_file.write(
-                f"Universe 2023\n{first_name}\n{last_name}\n{company}\n{title}\n{pronouns}\n{handle}\n")
-            badge_file.close()
 
         # Copy all the data to the badge
         print("Transferring")
         _transfer_folder(os.path.join(root_path,"preload"))
-        _transfer_folder(os.path.join(root_path,"generated"))
+
+        print(scanned)
+        scanned = _decode_scanned_data(scanned)
+        # Barcode gives data in the format
+        # 1687465756044001tUzB^Martin^Woodward^GitHub^VP, DevRel^He/him^@martinwoodward^
+        # Where pronouns and handle are optional but still delimited.
+        scan_data = scanned.split('^')
+
+        if len(scan_data) == 7:
+            # Got the scan data back in the format we expect
+            reg_id = scan_data[0]
+            first_name = scan_data[1]
+            last_name = scan_data[2]
+            company = scan_data[3]
+            handle = scan_data[6]
+
+            # By default convert to uppercase to match printed badges
+            # A hacker can always change the case later if they want
+            title = scan_data[4].upper()
+            pronouns = scan_data[5].upper()
+
+            # Depending on keyboard mapping, the @ symbol as the first character 
+            # of the handle may have been entered as "
+            # If so, replace it with @
+            if handle[0] == '"':
+                handle = "@" + handle[1:]
+            elif handle[0] != "@":
+                handle = "@" + handle
+
+            # Create a file called generated/badges/badge.txt for writing.
+            # Write "Universe 2023", first_name, lastname_name, company, title, pronouns, handle to the file on separate lines.
+            badge_filename = os.path.join(root_path,"generated/badges/badge.txt")
+            os.makedirs(os.path.dirname(badge_filename), exist_ok=True)
+            with open(badge_filename, "w") as badge_file:
+                badge_file.write(
+                    f"Universe 2023\n{first_name}\n{last_name}\n{company}\n{title}\n{pronouns}\n{handle}\n")
+                badge_file.close()
+
+            _transfer_folder(os.path.join(root_path,"generated"))
 
         # Reboot the badge
         self.set_state("rebooting")
@@ -216,6 +232,22 @@ def _call_mpremote(args):
     args.insert(0, 'mpremote')
     proc = subprocess.run(args, capture_output=True, text=True)
     return proc.returncode == 0
+
+def _decode_scanned_data(scanned):
+    # if the scanned text ends in "{" then it's been scanned with a barcode scanner 
+    # set to Spanish (which works better for accented characters) so we need to decode it.
+
+    # Otherwise we can just return the scanned
+    if scanned[-1] != "{":
+        return scanned
+
+    # Loop through the scanned and replace each character with the corresponding character in the latin set
+    decoded = ""
+    for c in scanned:
+        if c in spanish:
+            decoded += latin[spanish.index(c)]
+
+    return decoded
 
 def main():
     window = tk.Tk()
