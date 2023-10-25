@@ -125,7 +125,7 @@ class BadgeProgrammerUI(tk.Frame):
         # Where pronouns and handle are optional but still delimited.
         scan_data = scanned.split('^')
 
-        if len(scan_data) == 7:
+        if len(scan_data) == 8:
             # Got the scan data back in the format we expect
             reg_id = scan_data[0]
             first_name = scan_data[1]
