@@ -43,7 +43,7 @@ class SettingsMenu(tk.Frame):
         label_badge.pack(fill='x')
 
 
-        label_commit_id = tk.Label(self, text=self.get_commit_id(), anchor='w', background='black', foreground='white', font=('TkDefaultFont',18))
+        label_commit_id = tk.Label(self, text=f'Version: {self.get_commit_id()}', anchor='w', background='black', foreground='white', font=('TkDefaultFont',18))
         label_commit_id.pack(fill='x')
 
         self.close_btn.lift()
@@ -145,6 +145,6 @@ class SettingsMenu(tk.Frame):
         self.destroy()
 
     def get_commit_id(self):
-      commit_id = subprocess.run(['git','rev-parse','HEAD'], capture_output=True, text=True)
-      print(commit_id.stdout)
-      return commit_id.stdout[:7]
+      commit_id = subprocess.run(['git','rev-parse','--short', 'HEAD'], capture_output=True, text=True)
+      branch_name = subprocess.run(['git','branch','--show-current'], capture_output=True, text=True)
+      return f'{commit_id.stdout.strip()} ({branch_name.stdout.strip()})'
