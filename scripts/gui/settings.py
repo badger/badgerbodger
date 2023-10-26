@@ -42,6 +42,10 @@ class SettingsMenu(tk.Frame):
         label_badge = tk.Label(self, text=badge_label_text, anchor='w', background='black', foreground='white',  font=('TkDefaultFont', 18))
         label_badge.pack(fill='x')
 
+
+        label_commit_id = tk.Label(self, text=self.get_commit_id(), anchor='w', background='black', foreground='white', font=('TkDefaultFont',18))
+        label_commit_id.pack(fill='x')
+
         self.close_btn.lift()
 
         buttons_frame = tk.Frame(self, padx=60, pady=24, background='black')
@@ -139,3 +143,8 @@ class SettingsMenu(tk.Frame):
 
     def close(self):
         self.destroy()
+
+    def get_commit_id(self):
+      commit_id = subprocess.run(['git','rev-parse','HEAD'], capture_output=True, text=True)
+      print(commit_id.stdout)
+      return commit_id.stdout[:7]
