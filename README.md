@@ -21,6 +21,10 @@ Run the GUI
 ```
 python3 scripts/gui/main.py
 ```
+Or optionally run the manual flashing script
+```
+python3 scripts/bodge.py
+```
 
 ## Badger Bodger Device
 The Badger Bodger itself is a Raspberry Pi with a small display and a 2D barcode scanner attached.
