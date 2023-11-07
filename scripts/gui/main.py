@@ -141,9 +141,9 @@ class BadgeProgrammerUI(tk.Frame):
             # Depending on keyboard mapping, the @ symbol as the first character 
             # of the handle may have been entered as "
             # If so, replace it with @
-            if handle[0] == '"':
+            if handle and handle[0] == '"':
                 handle = "@" + handle[1:]
-            elif handle[0] != "@":
+            elif handle and handle[0] != "@":
                 handle = "@" + handle
 
             # Create a file called generated/badges/badge.txt for writing.

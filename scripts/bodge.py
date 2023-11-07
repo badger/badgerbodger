@@ -18,7 +18,7 @@ from unidecode import unidecode
 scan_data = [
     "RegistrationId", 
     "Mona", # First name
-    "List", # Last name
+    "Lisa", # Last name
     "GitHub", # Company
     "Octocat", # Job Title
     "she/her", # Pronouns 
@@ -49,12 +49,13 @@ def main():
     title = unidecode(scan_data[4].upper())
     pronouns = unidecode(scan_data[5].upper())
 
-    # Depending on keyboard mapping, the @ symbol as the first character 
-    if handle[0] == '"':
+    # Depending on keyboard mapping, the @ symbol as the first character maybe missing
+    # Check it if the handle is not empty and add it if needed
+    if handle and handle[0] == '"':
         handle = "@" + unidecode(handle[1:])
-    elif handle[0] != "@":
+    elif handle and handle[0] != "@":
         handle = "@" + unidecode(handle)
-
+    
     print('Copy preload content')
     _transfer_folder(os.path.join(root_path,"preload"))
 
