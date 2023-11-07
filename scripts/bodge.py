@@ -18,7 +18,7 @@ from unidecode import unidecode
 scan_data = [
     "RegistrationId", 
     "Mona", # First name
-    "List", # Last name
+    "Lisa", # Last name
     "GitHub", # Company
     "Octocat", # Job Title
     "she/her", # Pronouns 
