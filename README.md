@@ -21,6 +21,10 @@ Run the GUI
 ```
 python3 scripts/gui/main.py
 ```
+Or optionally run the manual flashing script
+```
+python3 scripts/bodge.py
+```
 
 ## Badger Bodger Device
 The Badger Bodger itself is a Raspberry Pi with a small display and a 2D barcode scanner attached.
@@ -84,7 +88,6 @@ Then finally edit the config.txt file and add the following to the bottom of the
 ```
 # Hyperpixel 4.0
 dtoverlay=vc4-kms-dpi-hyperpixel4
-dtparam=rotate=180
 ```
 
 Then eject the SD card from your laptop, insert it into the Raspberry Pi and boot.  Provided the Raspberry Pi has internet connectivity, within a few minutes the desktop will be displayed and then a few minutes after than the badge scanner GUI will be displayed.

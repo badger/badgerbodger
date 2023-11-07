@@ -54,8 +54,11 @@ def draw_badge():
     display.clear()
     
     # Draw the background
-    jpeg.open_file(BADGE_BACKGROUND)
-    jpeg.decode(0, 0)
+    try:
+        jpeg.open_file(BADGE_BACKGROUND)
+        jpeg.decode(0, 0)
+    except OSError:
+        print("Badge background error")
 
     # Draw the firstname, scaling it based on the available width
     display.set_pen(0)
@@ -154,3 +157,4 @@ while True:
 
     # If on battery, halt the Badger to save power, it will wake up if any of the front buttons are pressed
     display.halt()
+
