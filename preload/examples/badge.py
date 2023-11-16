@@ -138,7 +138,7 @@ try:
     
     
     # Truncate Title and pronouns to fit
-    title = truncatestring(title, DETAILS_TEXT_SIZE, 110)
+    # title = truncatestring(title, DETAILS_TEXT_SIZE, 110)
     pronouns = truncatestring(pronouns, DETAILS_TEXT_SIZE, 110)
     
 finally:
