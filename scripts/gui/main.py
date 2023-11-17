@@ -9,6 +9,7 @@ from settings import SettingsMenu
 import os
 import time
 import sys
+from get_contribution_graph import fetch_contribution_graph
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
 root_path = os.path.normpath(os.path.join(os.path.dirname(__file__), "..", ".."))
@@ -138,6 +139,7 @@ class BadgeProgrammerUI(tk.Frame):
             title = scan_data[4].upper()
             pronouns = scan_data[5].upper()
 
+        
             # Depending on keyboard mapping, the @ symbol as the first character 
             # of the handle may have been entered as "
             # If so, replace it with @
@@ -155,7 +157,14 @@ class BadgeProgrammerUI(tk.Frame):
                     f"Universe 2023\n{first_name}\n{last_name}\n{company}\n{title}\n{pronouns}\n{handle}\n")
                 badge_file.close()
 
+            # Fetch contribution graph
+            # try:
+            fetch_contribution_graph(handle[1:])
+            # except:
+                # print("Could not fetch contribution graph")
+
             _transfer_folder(os.path.join(root_path,"generated"))
+            
 
         # Reboot the badge
         self.set_state("rebooting")

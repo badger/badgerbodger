@@ -1,5 +1,11 @@
 import badger2040
 import jpegdec
+import contribution_graph
+import badger_os
+import json
+import machine
+import time
+import os
 
 # Global Constants
 WIDTH = badger2040.WIDTH
@@ -15,6 +21,9 @@ DETAILS_TEXT_SIZE = 0.5
 
 BADGE_PATH = "/badges/badge.txt"
 BADGE_BACKGROUND = "/badges/back.jpg"
+
+
+CURRENT_PAGE = 0 # 0=Badge; 1=contribution graph
 
 
 # Will be replaced with badge.txt
@@ -95,6 +104,39 @@ def draw_badge():
     
     display.update()
 
+def draw_page():
+# match case not available, using if-else
+    if CURRENT_PAGE == 0:
+        draw_badge()
+    elif CURRENT_PAGE == 1 or CURRENT_PAGE == 2:
+        contribution_graph.draw_contribution_graph(display)
+    display.update()
+
+
+def exit_to_launcher():
+    # # Changing state to set running application as launcher
+
+    badger_os.state_clear_running()
+    # state = {"running": "launcher", "page": 0}
+    # # # Saving the state file
+    # try:
+    #     with open("/state/launcher.json", "w") as f:
+    #         f.write(json.dumps(state))
+    #         f.flush()
+
+    # except OSError:
+    #     # State file does not exist, create it
+    #     import os
+    #     try:
+    #         os.stat("/state")
+    #     except OSError:
+    #         os.mkdir("/state")
+    #         badger_os.state_save("launcher", state)
+    
+    # # Clear the display and reset device
+    display.clear()
+    display.update()
+    machine.reset()
 
 # ------------------------------
 #        Program setup
@@ -148,12 +190,34 @@ finally:
 #       Main program
 # ------------------------------
 
-draw_badge()
+draw_page()
 
 while True:
-    # Sometimes a button press or hold will keep the system
-    # powered *through* HALT, so latch the power back on.
-    display.keepalive()
+    # Buttons UP / DOWN to view previous / next page of contribution graph
+    if CURRENT_PAGE == 1 and (display.pressed(badger2040.BUTTON_DOWN) or display.pressed(badger2040.BUTTON_UP)):
+        contribution_graph.CONTRIBUTION_GRAPH_PAGE = 1 if contribution_graph.CONTRIBUTION_GRAPH_PAGE == 0 else 0
+        draw_page()
+
+    # Button A opens launcher
+    elif display.pressed(badger2040.BUTTON_A):
+         exit_to_launcher()
+    
+    # Button B sets current page to Badge
+    elif CURRENT_PAGE != 0 and display.pressed(badger2040.BUTTON_B):
+        CURRENT_PAGE = 0
+        draw_page()
+        
+    # Button C sets current page to Contribution Graph
+    elif CURRENT_PAGE != 1 and display.pressed(badger2040.BUTTON_C):
+        CURRENT_PAGE = 1
+        contribution_graph.CONTRIBUTION_GRAPH_PAGE = 0
+        draw_page()
+        
+    # if incorrect button pressed, show popup info for 5 seconds
+    elif display.pressed(badger2040.BUTTON_A) or display.pressed(badger2040.BUTTON_B) or display.pressed(badger2040.BUTTON_C) or display.pressed(badger2040.BUTTON_UP) or display.pressed(badger2040.BUTTON_DOWN):
+        badger_os.warning(display, "a = launcher   b = badge   c = contributions")
+        time.sleep(5)
+        draw_page()
 
     # If on battery, halt the Badger to save power, it will wake up if any of the front buttons are pressed
     display.halt()
