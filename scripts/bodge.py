@@ -13,6 +13,7 @@ import subprocess
 import os
 import sys
 from unidecode import unidecode
+import time
 
 # Set the data to be loaded
 scan_data = [
@@ -35,7 +36,7 @@ root_path = os.path.normpath(os.path.join(os.path.dirname(__file__), ".."))
 def main():
     
     if not _call_mpremote(['ls']):
-        print("device not found, try resetting the badge and try again")
+        print("Try restarting the badge")
         sys.exit(1)
 
     print('- - - Loading badge - - -')
@@ -88,8 +89,11 @@ def _transfer_folder(root):
             _call_mpremote(['cp', localpath, remotepath])
 
 def _call_mpremote(args):
-    args.insert(0, 'mpremote')
-    proc = subprocess.run(args, capture_output=False, text=True)
+    exec_args = ['python3', '-m', 'mpremote'] + args
+    proc = subprocess.run(exec_args, capture_output=False, text=True)
+    if proc.stdout == "no device found":
+        return False
+    
     return proc.returncode == 0
 
 # Basic latin set & the Spanish keyboard input of set with US keyboard layout

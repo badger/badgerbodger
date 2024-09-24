@@ -11,7 +11,7 @@ LASTNAME_HEIGHT = 30
 DETAILS_HEIGHT = 20
 TEXT_WIDTH = WIDTH - LEFT_PADDING
 LINE_SPACING = 2
-DETAILS_TEXT_SIZE = 0.5 
+DETAILS_TEXT_SIZE = 0.45
 
 BADGE_PATH = "/badges/badge.txt"
 BADGE_BACKGROUND = "/badges/back.jpg"
@@ -138,7 +138,7 @@ try:
     
     
     # Truncate Title and pronouns to fit
-    title = truncatestring(title, DETAILS_TEXT_SIZE, 110)
+    # title = truncatestring(title, DETAILS_TEXT_SIZE, 110)
     pronouns = truncatestring(pronouns, DETAILS_TEXT_SIZE, 110)
     
 finally:
