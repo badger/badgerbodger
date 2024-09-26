@@ -17,7 +17,7 @@ root_path = os.path.normpath(os.path.join(os.path.dirname(__file__), "..", "..")
 # This is because a Spanish keyboard reading the UTF-8 encoded QR code will
 # do a slightly better job of passing through non-accented versions of the characters
 # than a US keyboard reading the UTF-8 encoded QR code which will just ignore them.
-latin  = " !\"$%&'()*+,-./0123456789<=>?ABCDEFGHIJKLMNOPQRSTUVWXYZ^_`abcdefghijklmnopqrstuvwxyzc@@"
+latin  = " !\"$%&'()*+,-./0123456789<=:?ABCDEFGHIJKLMNOPQRSTUVWXYZ^_`abcdefghijklmnopqrstuvwxyzc@@"
 spanish = " !@$%^-*(}],/.&0123456789<)>_ABCDEFGHIJKLMNOPQRSTUVWXYZ{?[abcdefghijklmnopqrstuvwxyz#²€"
 
 # GUI for badge programmer
