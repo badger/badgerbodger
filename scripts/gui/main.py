@@ -17,8 +17,8 @@ root_path = os.path.normpath(os.path.join(os.path.dirname(__file__), "..", "..")
 # This is because a Spanish keyboard reading the UTF-8 encoded QR code will
 # do a slightly better job of passing through non-accented versions of the characters
 # than a US keyboard reading the UTF-8 encoded QR code which will just ignore them.
-latin  = " !\"$%&'()*+,-./0123456789<=>?ABCDEFGHIJKLMNOPQRSTUVWXYZ^_`abcdefghijklmnopqrstuvwxyzc@"
-spanish = " !@$%^-*(}],/.&0123456789<)>_ABCDEFGHIJKLMNOPQRSTUVWXYZ{?[abcdefghijklmnopqrstuvwxyz#²"
+latin  = " !\"$%&'()*+,-./0123456789<=>?ABCDEFGHIJKLMNOPQRSTUVWXYZ^_`abcdefghijklmnopqrstuvwxyzc@@"
+spanish = " !@$%^-*(}],/.&0123456789<)>_ABCDEFGHIJKLMNOPQRSTUVWXYZ{?[abcdefghijklmnopqrstuvwxyz#²€"
 
 # GUI for badge programmer
 
@@ -123,9 +123,10 @@ class BadgeProgrammerUI(tk.Frame):
         # Barcode gives data in the format
         # 1687465756044001tUzB^Martin^Woodward^GitHub^VP, DevRel^He/him^@martinwoodward^
         # Where pronouns and handle are optional but still delimited.
+        print(scanned)
         scan_data = scanned.split('^')
-
-        if len(scan_data) == 8:
+        print (len(scan_data))
+        if len(scan_data) >= 7:
             # Got the scan data back in the format we expect
             reg_id = scan_data[0]
             first_name = scan_data[1]
@@ -147,12 +148,12 @@ class BadgeProgrammerUI(tk.Frame):
                 handle = "@" + handle
 
             # Create a file called generated/badges/badge.txt for writing.
-            # Write "Universe 2023", first_name, lastname_name, company, title, pronouns, handle to the file on separate lines.
+            # Write "Universe 2024", first_name, lastname_name, company, title, pronouns, handle to the file on separate lines.
             badge_filename = os.path.join(root_path,"generated/badges/badge.txt")
             os.makedirs(os.path.dirname(badge_filename), exist_ok=True)
             with open(badge_filename, "w") as badge_file:
                 badge_file.write(
-                    f"Universe 2023\n{first_name}\n{last_name}\n{company}\n{title}\n{pronouns}\n{handle}\n")
+                    f"Universe 2024\n{first_name}\n{last_name}\n{company}\n{title}\n{pronouns}\n{handle}\n")
                 badge_file.close()
 
             _transfer_folder(os.path.join(root_path,"generated"))
@@ -223,6 +224,9 @@ class BadgeProgrammerUI(tk.Frame):
 def _transfer_folder(root):
     # Iterate over the files in a given folder
     for subdir, dirs, files in os.walk(root):
+        # create the directories on the badge if they do not exist
+        for dir in dirs:
+            _call_mpremote(['mkdir', dir])
         for file in files:
             localpath = os.path.join(subdir, file)
             remotepath = ":" + os.path.join(subdir, file).removeprefix(root)
@@ -230,15 +234,15 @@ def _transfer_folder(root):
 
 def _call_mpremote(args):
     args.insert(0, 'mpremote')
+    # print(args)
     proc = subprocess.run(args, capture_output=True, text=True)
     return proc.returncode == 0
 
 def _decode_scanned_data(scanned):
-    # if the scanned text ends in "{" then it's been scanned with a barcode scanner 
-    # set to Spanish (which works better for accented characters) so we need to decode it.
-
-    # Otherwise we can just return the scanned
-    if scanned[-1] != "{":
+    # Check if the scanned text contains more than 3 { characters. 
+    # If so, then it's been scanned with a barcode scanner set to Spanish
+    # (which works better for accented characters) so we need to decode it.
+    if scanned.count("{") < 3:
         return scanned
 
     # Loop through the scanned and replace each character with the corresponding character in the latin set
