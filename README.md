@@ -47,6 +47,14 @@ The Hyperpixel 4.0 display comes with all the hardware you need to build the uni
 - Connect the Hyperpixel 4.0 to the Raspberry Pi using the GPIO pins and push down gently
 - Screw in the Hyperpixel 4.0 and Raspberry Pi to the 3D printed case using the screws provided
 
+## Setting up the Barcode Scanner
+By default, most hardware barcode scanners will be configured as a US keyboard HID device and type the characters entered followed by a carrage return.  However, those types of readers will ignore accented and unicode characters encoded as text.  Setting up the scanner to act like a Spanish keyboard changes how it enters accented characters giving the main character followed the the accents which makes it slighty easier to parse out those characters that the badger cannot display with the built in fonts.
+
+For the model of barcode reader we are using (EY-H2) scan the following QR control codes to configure which keyboard setting it should be in.
+
+<img width="400" alt="image" src="https://github.com/user-attachments/assets/4c384939-ca46-4353-b42b-e6cad6a9a875">
+
+
 ### Preparing the SD Card
 Note that Raspbian Bookworm was released during the construction of the badge scanners, however it looked like it contained lots of changes to the desktop environment and how python operates that we haven't tested with it yet.  Therefore, when using Raspberry Pi Imager to flash the SD card, used the "Raspberry PI OS (Legacy)" opetion which is located under the "Raspberry Pi OS (other)" section.
 
