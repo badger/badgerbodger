@@ -17,7 +17,7 @@ root_path = os.path.normpath(os.path.join(os.path.dirname(__file__), "..", "..")
 # This is because a Spanish keyboard reading the UTF-8 encoded QR code will
 # do a slightly better job of passing through non-accented versions of the characters
 # than a US keyboard reading the UTF-8 encoded QR code which will just ignore them.
-latin  = " !\"$%&'()*+,-./0123456789<=>?ABCDEFGHIJKLMNOPQRSTUVWXYZ^_`abcdefghijklmnopqrstuvwxyzc@@"
+latin  = " !\"$%&'()*+,-./0123456789<=:?ABCDEFGHIJKLMNOPQRSTUVWXYZ^_`abcdefghijklmnopqrstuvwxyzc@@"
 spanish = " !@$%^-*(}],/.&0123456789<)>_ABCDEFGHIJKLMNOPQRSTUVWXYZ{?[abcdefghijklmnopqrstuvwxyz#²€"
 
 # GUI for badge programmer
@@ -132,12 +132,9 @@ class BadgeProgrammerUI(tk.Frame):
             first_name = scan_data[1]
             last_name = scan_data[2]
             company = scan_data[3]
+            title = scan_data[4]
+            pronouns = scan_data[5]
             handle = scan_data[6]
-
-            # By default convert to uppercase to match printed badges
-            # A hacker can always change the case later if they want
-            title = scan_data[4].upper()
-            pronouns = scan_data[5].upper()
 
             # Depending on keyboard mapping, the @ symbol as the first character 
             # of the handle may have been entered as "
