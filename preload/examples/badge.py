@@ -11,15 +11,15 @@ LASTNAME_HEIGHT = 30
 DETAILS_HEIGHT = 20
 TEXT_WIDTH = WIDTH - LEFT_PADDING
 LINE_SPACING = 2
-DETAILS_TEXT_SIZE = 0.45
+DETAILS_TEXT_SIZE = 0.6
 
 BADGE_PATH = "/badges/badge.txt"
 BADGE_BACKGROUND = "/badges/back.jpg"
 
 
 # Will be replaced with badge.txt
-# "Universe 2023", first_name, lastname_name, company, title, pronouns to the file on separate lines.
-DEFAULT_TEXT = """Universe 2023
+# "Universe 2024", first_name, lastname_name, company, title, pronouns to the file on separate lines.
+DEFAULT_TEXT = """Universe 2024
 Mona Lisa
 Octocat
 GitHub
@@ -70,14 +70,14 @@ def draw_badge():
         if name_length >= TEXT_WIDTH and name_size >= 0.1:
             name_size -= 0.01
         else:
-            display.text(first_name, LEFT_PADDING, 20, TEXT_WIDTH, name_size)
+            display.text(first_name, LEFT_PADDING - 3, 20, TEXT_WIDTH, name_size)
             break
 
     # Draw the lastname, scaling it based on the available width
     display.set_pen(0)
     display.set_font("sans")
     display.set_thickness(2)
-    lastname_size = 0.7  # A sensible starting scale
+    lastname_size = 0.8  # A sensible starting scale
     while True:
         lastname_length = display.measure_text(last_name, lastname_size)
         if lastname_length >= TEXT_WIDTH and lastname_size >= 0.1:
@@ -89,9 +89,18 @@ def draw_badge():
     # Draw the title and pronouns, aligned to the bottom & truncated to fit on one line
     display.set_pen(0)
     display.set_font("sans")
+    
+    title_size = DETAILS_TEXT_SIZE  # A sensible starting scale
+    while True:
+        title_length = display.measure_text(title, title_size)
+        if title_length >= TEXT_WIDTH and title_size >= 0.1:
+            title_size -= 0.01
+        else:
+            display.text(title, LEFT_PADDING, HEIGHT - (DETAILS_HEIGHT * 2) - LINE_SPACING, TEXT_WIDTH, title_size)
+            break
 
-    display.text(title, LEFT_PADDING, HEIGHT - (DETAILS_HEIGHT * 2) - LINE_SPACING, TEXT_WIDTH, DETAILS_TEXT_SIZE)
-    display.text(pronouns, LEFT_PADDING, HEIGHT - DETAILS_HEIGHT, TEXT_WIDTH, DETAILS_TEXT_SIZE)
+    # Diaply handle at the bottom
+    display.text(handle, LEFT_PADDING, HEIGHT - DETAILS_HEIGHT, TEXT_WIDTH, DETAILS_TEXT_SIZE)
     
     display.update()
 
@@ -118,8 +127,8 @@ except OSError:
     badge = open(BADGE_PATH, "r")
 
 # Read in the next 6 lines
-# "Universe 2023", first_name, lastname_name, company, title, pronouns, handle from the file on separate lines.
-DEFAULT_TEXT = """Universe 2023
+# "Universe 2024", first_name, lastname_name, company, title, pronouns, handle from the file on separate lines.
+DEFAULT_TEXT = """Universe 2024
 Mona Lisa
 Octocat
 GitHub
@@ -128,18 +137,18 @@ she/her
 @mona
 """
 try:
-    event = badge.readline()         # "Universe 2023"
+    event = badge.readline()         # "Universe 2024"
     first_name = badge.readline()    # "Mona Lisa"
     last_name = badge.readline()     # "Octocat"
     company = badge.readline()       # "GitHub"
     title = badge.readline()         # "Company Mascot"
     pronouns = badge.readline()      # "she/her"
-    # handle = badge.readline()        # "@mona"
-    
+    handle = badge.readline()        # "@mona"
     
     # Truncate Title and pronouns to fit
-    # title = truncatestring(title, DETAILS_TEXT_SIZE, 110)
+    title = truncatestring(title, DETAILS_TEXT_SIZE, 220)
     pronouns = truncatestring(pronouns, DETAILS_TEXT_SIZE, 110)
+    handle = truncatestring(handle, DETAILS_TEXT_SIZE, 110)
     
 finally:
     badge.close()
@@ -157,4 +166,3 @@ while True:
 
     # If on battery, halt the Badger to save power, it will wake up if any of the front buttons are pressed
     display.halt()
-
