@@ -5,10 +5,10 @@ import jpegdec
 WIDTH = badger2040.WIDTH
 HEIGHT = badger2040.HEIGHT
 
-LEFT_PADDING = 5
-NAME_HEIGHT = 40
+LEFT_PADDING = 7
+NAME_HEIGHT = 45
 LASTNAME_HEIGHT = 30
-DETAILS_HEIGHT = 20
+DETAILS_HEIGHT = 18
 TEXT_WIDTH = WIDTH - LEFT_PADDING
 LINE_SPACING = 2
 DETAILS_TEXT_SIZE = 2
@@ -63,21 +63,21 @@ def draw_badge():
     # Draw the firstname, scaling it based on the available width
     display.set_pen(0)
     display.set_font("bitmap8")
-    display.set_thickness(3)
-    name_size = 3.5  # A sensible starting scale
+    display.set_thickness(4)
+    name_size = 4  # A sensible starting scale
     while True:
         name_length = display.measure_text(first_name, name_size)
         if name_length >= TEXT_WIDTH and name_size >= 0.1:
             name_size -= 0.01
         else:
-            display.text(first_name, LEFT_PADDING, 10, TEXT_WIDTH, name_size)
+            display.text(first_name, LEFT_PADDING, 5, TEXT_WIDTH, name_size)
             break
 
     # Draw the lastname, scaling it based on the available width
     display.set_pen(0)
     display.set_font("bitmap8")
-    display.set_thickness(2)
-    lastname_size = 2.5  # A sensible starting scale
+    display.set_thickness(4)
+    lastname_size = 3  # A sensible starting scale
     while True:
         lastname_length = display.measure_text(last_name, lastname_size)
         if lastname_length >= TEXT_WIDTH and lastname_size >= 0.1:
@@ -91,7 +91,7 @@ def draw_badge():
     display.set_font("bitmap8")
     
     # Title
-    display.text(title, LEFT_PADDING, HEIGHT - (DETAILS_HEIGHT * 2) - LINE_SPACING, TEXT_WIDTH, DETAILS_TEXT_SIZE)
+    display.text(title, LEFT_PADDING, HEIGHT - (DETAILS_HEIGHT * 2) - LINE_SPACING - 2, TEXT_WIDTH, DETAILS_TEXT_SIZE)
 
     # Diaply handle at the bottom
     display.text(handle, LEFT_PADDING, HEIGHT - DETAILS_HEIGHT, TEXT_WIDTH, DETAILS_TEXT_SIZE)

@@ -1,6 +1,6 @@
 Images must be 296x128 pixel NON-PROGRESSIVE jpegs
 
-The badge can only dsplay at 1-bit color depth, so any colour
+The badge can only dsplay at 1-bit color depth, so any color
 will be dithered to black and white.
 
 For best results, create a 1-bit PNG file and then use an

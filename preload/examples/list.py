@@ -29,7 +29,7 @@ LIST_HEIGHT = HEIGHT - LIST_START - LIST_PADDING - ARROW_HEIGHT
 
 
 # Default list items - change the list items by editing checklist.txt
-list_items = ["Badger", "Badger", "Badger", "Badger", "Badger", "Mushroom", "Mushroom", "Snake"]
+list_items = ["Keynote", "Hack Badge", "Eat Donut", "Chat", "Sleep", "Code", "Learn", "Commit"]
 save_checklist = False
 
 try:
