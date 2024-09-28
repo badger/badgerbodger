@@ -93,8 +93,12 @@ def draw_badge():
     # Title
     display.text(title, LEFT_PADDING, HEIGHT - (DETAILS_HEIGHT * 2) - LINE_SPACING - 2, TEXT_WIDTH, DETAILS_TEXT_SIZE)
 
-    # Diaply handle at the bottom
-    display.text(handle, LEFT_PADDING, HEIGHT - DETAILS_HEIGHT, TEXT_WIDTH, DETAILS_TEXT_SIZE)
+    # Show pronouns if given, otherwise show any handle or blank if neither
+    # if pronouns exists and is not empty, show it
+    if pronouns and pronouns.strip() != "":
+        display.text(pronouns, LEFT_PADDING, HEIGHT - DETAILS_HEIGHT, TEXT_WIDTH, DETAILS_TEXT_SIZE)
+    else:
+        display.text(handle, LEFT_PADDING, HEIGHT - DETAILS_HEIGHT, TEXT_WIDTH, DETAILS_TEXT_SIZE)
     
     display.update()
 
@@ -139,6 +143,10 @@ try:
     pronouns = badge.readline()      # "she/her"
     handle = badge.readline()        # "@mona"
     
+    # If the first name is empty, use the last name as the first name
+    if first_name.strip() == "":
+        first_name = last_name
+        last_name = ""
     
     # Truncate Title and pronouns to fit
     title = truncatestring(title, DETAILS_TEXT_SIZE, 310)
