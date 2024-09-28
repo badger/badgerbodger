@@ -6,12 +6,12 @@ WIDTH = badger2040.WIDTH
 HEIGHT = badger2040.HEIGHT
 
 LEFT_PADDING = 5
-NAME_HEIGHT = 50
+NAME_HEIGHT = 40
 LASTNAME_HEIGHT = 30
 DETAILS_HEIGHT = 20
 TEXT_WIDTH = WIDTH - LEFT_PADDING
 LINE_SPACING = 2
-DETAILS_TEXT_SIZE = 0.6
+DETAILS_TEXT_SIZE = 2
 
 BADGE_PATH = "/badges/badge.txt"
 BADGE_BACKGROUND = "/badges/back.jpg"
@@ -62,22 +62,22 @@ def draw_badge():
 
     # Draw the firstname, scaling it based on the available width
     display.set_pen(0)
-    display.set_font("sans")
+    display.set_font("bitmap8")
     display.set_thickness(3)
-    name_size = 1.0  # A sensible starting scale
+    name_size = 3.5  # A sensible starting scale
     while True:
         name_length = display.measure_text(first_name, name_size)
         if name_length >= TEXT_WIDTH and name_size >= 0.1:
             name_size -= 0.01
         else:
-            display.text(first_name, LEFT_PADDING - 3, 20, TEXT_WIDTH, name_size)
+            display.text(first_name, LEFT_PADDING, 10, TEXT_WIDTH, name_size)
             break
 
     # Draw the lastname, scaling it based on the available width
     display.set_pen(0)
-    display.set_font("sans")
+    display.set_font("bitmap8")
     display.set_thickness(2)
-    lastname_size = 0.8  # A sensible starting scale
+    lastname_size = 2.5  # A sensible starting scale
     while True:
         lastname_length = display.measure_text(last_name, lastname_size)
         if lastname_length >= TEXT_WIDTH and lastname_size >= 0.1:
@@ -88,16 +88,10 @@ def draw_badge():
 
     # Draw the title and pronouns, aligned to the bottom & truncated to fit on one line
     display.set_pen(0)
-    display.set_font("sans")
+    display.set_font("bitmap8")
     
-    title_size = DETAILS_TEXT_SIZE  # A sensible starting scale
-    while True:
-        title_length = display.measure_text(title, title_size)
-        if title_length >= TEXT_WIDTH and title_size >= 0.1:
-            title_size -= 0.01
-        else:
-            display.text(title, LEFT_PADDING, HEIGHT - (DETAILS_HEIGHT * 2) - LINE_SPACING, TEXT_WIDTH, title_size)
-            break
+    # Title
+    display.text(title, LEFT_PADDING, HEIGHT - (DETAILS_HEIGHT * 2) - LINE_SPACING, TEXT_WIDTH, DETAILS_TEXT_SIZE)
 
     # Diaply handle at the bottom
     display.text(handle, LEFT_PADDING, HEIGHT - DETAILS_HEIGHT, TEXT_WIDTH, DETAILS_TEXT_SIZE)
@@ -145,10 +139,11 @@ try:
     pronouns = badge.readline()      # "she/her"
     handle = badge.readline()        # "@mona"
     
+    
     # Truncate Title and pronouns to fit
-    title = truncatestring(title, DETAILS_TEXT_SIZE, 220)
+    title = truncatestring(title, DETAILS_TEXT_SIZE, 310)
     pronouns = truncatestring(pronouns, DETAILS_TEXT_SIZE, 110)
-    handle = truncatestring(handle, DETAILS_TEXT_SIZE, 110)
+    handle = truncatestring(handle, DETAILS_TEXT_SIZE, 220)
     
 finally:
     badge.close()
@@ -166,3 +161,4 @@ while True:
 
     # If on battery, halt the Badger to save power, it will wake up if any of the front buttons are pressed
     display.halt()
+
