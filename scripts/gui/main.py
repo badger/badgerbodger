@@ -199,6 +199,9 @@ class BadgeProgrammerUI(tk.Frame):
     def nuke_badge(self):
         self.after_cancel(self.badge_loop_scheduler)
         self.set_state("wait")
+        # Print "Nuking" then the location of nuke.sh
+        print("Nuking " + os.path.join(root_path,'nuke.sh'))
+        
         subprocess.run(['bash', os.path.join(root_path,'nuke.sh')])
         self.badge_detection_loop()
 
