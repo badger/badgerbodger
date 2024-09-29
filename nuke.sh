@@ -8,4 +8,4 @@ echo "$parent_path"
 
 mpremote bootloader
 sleep 5
-cp uf2-images/pimoroni-*.uf2 /media/*/RPI-RP2
+cp uf2-images/pimoroni-*.uf2 /media/badger/RP2350
