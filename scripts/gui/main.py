@@ -113,19 +113,16 @@ class BadgeProgrammerUI(tk.Frame):
         self.after_cancel(self.badge_loop_scheduler)
         self.set_state("uploading")
 
-
+        print(scanned)
         # Copy all the data to the badge
         print("Transferring")
         _transfer_folder(os.path.join(root_path,"preload"))
-
-        print(scanned)
         scanned = _decode_scanned_data(scanned)
         # Barcode gives data in the format
         # 1687465756044001tUzB^Martin^Woodward^GitHub^VP, DevRel^He/him^@martinwoodward^
         # Where pronouns and handle are optional but still delimited.
         print(scanned)
         scan_data = scanned.split('^')
-        print (len(scan_data))
         if len(scan_data) >= 7:
             # Got the scan data back in the format we expect
             reg_id = scan_data[0]
@@ -150,7 +147,6 @@ class BadgeProgrammerUI(tk.Frame):
             # Create a file called generated/badges/badge.txt for writing.
             # Write "Universe 2024", first_name, lastname_name, company, title, pronouns, handle to the file on separate lines.
             badge_filename = os.path.join(root_path,"generated/badges/badge.txt")
-            print(handle)
             os.makedirs(os.path.dirname(badge_filename), exist_ok=True)
             with open(badge_filename, "w") as badge_file:
                 badge_file.write(
