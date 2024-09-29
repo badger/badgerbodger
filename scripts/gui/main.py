@@ -113,19 +113,16 @@ class BadgeProgrammerUI(tk.Frame):
         self.after_cancel(self.badge_loop_scheduler)
         self.set_state("uploading")
 
-
+        print(scanned)
         # Copy all the data to the badge
         print("Transferring")
         _transfer_folder(os.path.join(root_path,"preload"))
-
-        print(scanned)
         scanned = _decode_scanned_data(scanned)
         # Barcode gives data in the format
         # 1687465756044001tUzB^Martin^Woodward^GitHub^VP, DevRel^He/him^@martinwoodward^
         # Where pronouns and handle are optional but still delimited.
         print(scanned)
         scan_data = scanned.split('^')
-        print (len(scan_data))
         if len(scan_data) >= 7:
             # Got the scan data back in the format we expect
             reg_id = scan_data[0]
@@ -137,9 +134,12 @@ class BadgeProgrammerUI(tk.Frame):
             handle = scan_data[6]
 
             # Depending on keyboard mapping, the @ symbol as the first character 
-            # of the handle may have been entered as "
-            # If so, replace it with @
+            # of the handle may have been entered as " or as the 2 key.
+            # If so, replace it with @.  If the handle is not empty and does not
+            # start with @, add @ to the beginning of the handle.
             if handle and handle[0] == '"':
+                handle = "@" + handle[1:]
+            elif handle and handle[0] == '2':
                 handle = "@" + handle[1:]
             elif handle and handle[0] != "@":
                 handle = "@" + handle
@@ -199,6 +199,9 @@ class BadgeProgrammerUI(tk.Frame):
     def nuke_badge(self):
         self.after_cancel(self.badge_loop_scheduler)
         self.set_state("wait")
+        # Print "Nuking" then the location of nuke.sh
+        print("Nuking " + os.path.join(root_path,'nuke.sh'))
+        
         subprocess.run(['bash', os.path.join(root_path,'nuke.sh')])
         self.badge_detection_loop()
 
