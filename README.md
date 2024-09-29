@@ -63,10 +63,17 @@ In advanced options (the little gear icon), the following options were selected:
 - Enable SSH using password authentication
 - Set the user to `badger` and password to the one stored in the password manager
 - Configure Wireless LAN to connect to the appropriate network
-- Set the locale to `US/Pacific` and keyboard layout to `US`
+- Set the locale to `US/Los Angeles` and keyboard layout to `US`
+- Set the options to not eject the card after writing
 
-Once Raspbian is flashed to the SD card, re-insert it into the computer and edit the `firstrun.sh` script to include the following
-just before the last 3 lines of the script (i.e. just before) `rm -f /boot/firstrun.sh`
+
+
+Once Raspbian is flashed to the SD card, run the following to edit `firstrun.sh` and `config.txt`
+```
+./prepcard.sh
+```
+
+This includes the following just before the last 3 lines of the script (i.e. just before) `rm -f /boot/firstrun.sh`
 
 ```
 # Create the install.sh script to clone a git repo, then run firstrun.sh in it
@@ -74,7 +81,7 @@ mkdir -p /home/badger/.config/autostart
 cat << EOF > /home/badger/install.sh
 #!/bin/bash
 sleep 30
-git clone --branch prod https://github.com/badger2040/badgerbodger.git /home/badger/badgerbodger
+git clone --branch prod https://github.com/badger/badgerbodger.git /home/badger/badgerbodger
 chmod +x /home/badger/badgerbodger/firstrun.sh
 /bin/bash /home/badger/badgerbodger/firstrun.sh
 rm /home/badger/.config/autostart/install.desktop
@@ -92,10 +99,9 @@ chown -R badger:badger /home/badger
 
 ```
 
-Then finally edit the config.txt file and add the following to the bottom of the file:
+And then it also edits the config.txt file to add the following to the bottom of the file:
 ```
 # Hyperpixel 4.0
 dtoverlay=vc4-kms-dpi-hyperpixel4
 ```
-
 Then eject the SD card from your laptop, insert it into the Raspberry Pi and boot.  Provided the Raspberry Pi has internet connectivity, within a few minutes the desktop will be displayed and then a few minutes after than the badge scanner GUI will be displayed.
