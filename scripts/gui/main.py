@@ -137,9 +137,12 @@ class BadgeProgrammerUI(tk.Frame):
             handle = scan_data[6]
 
             # Depending on keyboard mapping, the @ symbol as the first character 
-            # of the handle may have been entered as "
-            # If so, replace it with @
+            # of the handle may have been entered as " or as the 2 key.
+            # If so, replace it with @.  If the handle is not empty and does not
+            # start with @, add @ to the beginning of the handle.
             if handle and handle[0] == '"':
+                handle = "@" + handle[1:]
+            elif handle and handle[0] == '2':
                 handle = "@" + handle[1:]
             elif handle and handle[0] != "@":
                 handle = "@" + handle
@@ -147,6 +150,7 @@ class BadgeProgrammerUI(tk.Frame):
             # Create a file called generated/badges/badge.txt for writing.
             # Write "Universe 2024", first_name, lastname_name, company, title, pronouns, handle to the file on separate lines.
             badge_filename = os.path.join(root_path,"generated/badges/badge.txt")
+            print(handle)
             os.makedirs(os.path.dirname(badge_filename), exist_ok=True)
             with open(badge_filename, "w") as badge_file:
                 badge_file.write(
