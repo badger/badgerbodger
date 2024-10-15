@@ -28,7 +28,7 @@ except OSError:
 
 state = {
     "current_image": 0,
-    "show_info": True
+    "show_info": False
 }
 
 
